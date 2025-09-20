@@ -21,7 +21,11 @@ const prisma = new PrismaClient();
 // Middleware
 app.use(helmet());
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+  origin: [
+    process.env.FRONTEND_URL || 'http://localhost:3000',
+    'https://suanhasaigon247-manager.netlify.app',
+    'http://localhost:3000'
+  ],
   credentials: true
 }));
 app.use(morgan('combined'));
