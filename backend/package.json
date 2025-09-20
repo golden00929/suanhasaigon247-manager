@@ -5,13 +5,16 @@
   "type": "module",
   "main": "dist/app.js",
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && prisma generate",
     "start": "node dist/app.js",
     "dev": "npx tsx watch src/app.ts",
     "db:generate": "prisma generate",
     "db:push": "prisma db push",
-    "db:migrate": "prisma migrate dev",
+    "db:migrate": "prisma migrate deploy",
+    "db:migrate:dev": "prisma migrate dev",
     "db:studio": "prisma studio",
+    "db:seed": "npx tsx prisma/seed.ts",
+    "postbuild": "prisma migrate deploy && npm run db:seed",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
