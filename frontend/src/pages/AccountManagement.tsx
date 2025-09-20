@@ -84,21 +84,26 @@ const AccountManagement: React.FC = () => {
         // 백엔드에 새 직원 추가
         const addUserToBackend = async () => {
           try {
+            // 필수 데이터 검증
+            if (!newEmployeeData.username || !newEmployeeData.email || !newEmployeeData.password || !newEmployeeData.fullName) {
+              throw new Error('필수 정보 (사용자명, 이메일, 비밀번호, 성명)를 모두 입력해주세요.');
+            }
+
             const newUserData = {
-              username: newEmployeeData.username,
-              email: newEmployeeData.email,
+              username: newEmployeeData.username.trim(),
+              email: newEmployeeData.email.trim(),
               password: newEmployeeData.password,
               role: newEmployeeData.role,
               isActive: newEmployeeData.isActive,
-              fullName: newEmployeeData.fullName,
-              phone: newEmployeeData.phone,
-              position: newEmployeeData.position,
-              department: newEmployeeData.department,
+              fullName: newEmployeeData.fullName.trim(),
+              phone: newEmployeeData.phone || '',
+              position: newEmployeeData.position || '',
+              department: newEmployeeData.department || '',
               birthDate: convertDate(newEmployeeData.birthDate),
               hireDate: convertDate(newEmployeeData.hireDate),
-              address: newEmployeeData.address,
+              address: newEmployeeData.address || '',
               profileImage: newEmployeeData.profileImage || '',
-              notes: newEmployeeData.notes
+              notes: newEmployeeData.notes || ''
             };
 
             console.log('백엔드로 전송할 직원 데이터:', newUserData);
@@ -118,7 +123,18 @@ const AccountManagement: React.FC = () => {
             }
           } catch (error) {
             console.error('직원 추가 중 오류:', error);
-            setError('❌ 직원 추가에 실패했습니다: ' + ((error as Error).message || '알 수 없는 오류'));
+            const errorMessage = (error as any)?.response?.data?.message || (error as Error).message || '알 수 없는 오류';
+            console.error('상세 에러 정보:', errorMessage);
+
+            if (errorMessage.includes('Email already exists')) {
+              setError('❌ 이미 존재하는 이메일입니다. 다른 이메일을 사용해주세요.');
+            } else if (errorMessage.includes('Username already exists')) {
+              setError('❌ 이미 존재하는 사용자명입니다. 다른 사용자명을 사용해주세요.');
+            } else if (errorMessage.includes('required')) {
+              setError('❌ 필수 정보가 누락되었습니다. 모든 필드를 입력해주세요.');
+            } else {
+              setError('❌ 직원 추가에 실패했습니다: ' + errorMessage);
+            }
           }
         };
 
