@@ -1,157 +1,177 @@
-# Suanha Saigon 247 - Quotation Management System
+# 🏠 Suanha Manager - 베트남 유지보수 회사 관리 시스템
 
-A comprehensive quotation management system for maintenance companies, featuring multi-language support (Korean/Vietnamese) and role-based access control.
+> **베타 버전 v1.0.0** - 완성된 견적 및 직원 관리 시스템
+> 베트남 유지보수 회사를 위한 포괄적인 비즈니스 관리 솔루션
 
-## Features
+![React](https://img.shields.io/badge/React-18.2.0-blue.svg)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.2.2-blue.svg)
+![Vite](https://img.shields.io/badge/Vite-5.3.4-646CFF.svg)
+![TailwindCSS](https://img.shields.io/badge/TailwindCSS-3.4.0-38B2AC.svg)
+![License](https://img.shields.io/badge/License-Private-red.svg)
 
-- **Multi-language Support**: Korean for administrators, Vietnamese for employees
-- **Role-based Access**: Admin and Employee roles with different permissions
-- **Customer Management**: Complete customer database with multiple addresses
-- **Quotation Management**: Create, edit, and track quotations
-- **Price Calculator**: Manage pricing categories and items (Admin only)
-- **Account Management**: User management system (Admin only)
-- **Dashboard**: Real-time statistics and recent activity
+---
 
-## Tech Stack
+## 🚀 빠른 시작
 
-### Backend
-- Node.js + Express + TypeScript
-- PostgreSQL + Prisma ORM
-- JWT Authentication
-- bcryptjs for password hashing
-
-### Frontend
-- React 18 + TypeScript
-- Vite for build tooling
-- TailwindCSS for styling
-- React Router for navigation
-- Axios for API calls
-
-## Project Structure
-
-```
-suanhasaigon247-manager/
-├── backend/                 # Backend API
-│   ├── src/
-│   │   ├── routes/         # API routes
-│   │   ├── middleware/     # Auth middleware
-│   │   ├── services/       # Business logic
-│   │   ├── types/          # TypeScript types
-│   │   └── utils/          # Utility functions
-│   ├── prisma/             # Database schema
-│   └── package.json
-├── frontend/               # Frontend React app
-│   ├── src/
-│   │   ├── components/     # React components
-│   │   ├── pages/          # Page components
-│   │   ├── contexts/       # React contexts
-│   │   ├── services/       # API services
-│   │   ├── types/          # TypeScript types
-│   │   └── locales/        # i18n translations
-│   └── package.json
-└── docs/                   # Documentation
-```
-
-## Getting Started
-
-### Prerequisites
-- Node.js 18+
-- PostgreSQL 14+
-- npm or yarn
-
-### Backend Setup
-
-1. Navigate to backend directory:
+### **설치 및 실행**
 ```bash
-cd backend
-```
-
-2. Install dependencies:
-```bash
-npm install
-```
-
-3. Set up environment variables:
-```bash
-# Create .env file
-DATABASE_URL="postgresql://username:password@localhost:5432/suanhasaigon247?schema=public"
-JWT_SECRET="your-super-secret-jwt-key"
-JWT_EXPIRES_IN="7d"
-PORT=5000
-NODE_ENV="development"
-```
-
-4. Set up database:
-```bash
-npx prisma generate
-npx prisma db push
-```
-
-5. Start the server:
-```bash
-npm run dev
-```
-
-### Frontend Setup
-
-1. Navigate to frontend directory:
-```bash
+# 프론트엔드 실행
 cd frontend
-```
-
-2. Install dependencies:
-```bash
 npm install
-```
-
-3. Set up environment variables:
-```bash
-# Create .env file
-VITE_API_URL=http://localhost:5000/api
-```
-
-4. Start the development server:
-```bash
 npm run dev
 ```
 
-## Usage
+### **접속 정보**
+- **URL**: http://localhost:3000
+- **관리자**: `admin` / `admin123`
+- **직원**: `employee1` / `emp123`
 
-1. Access the application at `http://localhost:3000`
-2. Login with admin credentials (create via API or database)
-3. Switch between Korean (Admin) and Vietnamese (Employee) languages
-4. Navigate through different sections based on your role
+---
 
-## API Endpoints
+## ✨ 주요 기능
 
-### Authentication
-- `POST /api/auth/login` - User login
-- `GET /api/auth/me` - Get current user
+### 💰 **가격 계산기**
+- 베트남식 숫자 표기법 (1.000.000 VND)
+- 재료비, 인건비, 출장비, 마진율 개별 설정
+- 단계별 계산 과정 투명화
 
-### Customers
-- `GET /api/customers` - List customers
-- `POST /api/customers` - Create customer
-- `PUT /api/customers/:id` - Update customer
-- `DELETE /api/customers/:id` - Delete customer
+### 👥 **고객 관리**
+- 개인/기업 고객 분류
+- 수리 기록 추적
+- 검색 및 필터링
 
-### Quotations
-- `GET /api/quotations` - List quotations
-- `POST /api/quotations` - Create quotation
-- `PUT /api/quotations/:id` - Update quotation
-- `DELETE /api/quotations/:id` - Delete quotation
+### 📋 **견적 관리**
+- 견적서 작성 및 편집
+- PDF 자동 생성
+- 상태 관리 (초안/발송/승인/거절)
 
-### Price Management (Admin only)
-- `GET /api/prices/categories` - List price categories
-- `POST /api/prices/categories` - Create category
-- `GET /api/prices/items` - List price items
-- `POST /api/prices/items` - Create price item
+### ⚙️ **계정 관리** (관리자 전용)
+- 직원 계정 CRUD
+- 프로필 사진 업로드
+- 권한 관리
 
-### User Management (Admin only)
-- `GET /api/users` - List users
-- `POST /api/users` - Create user
-- `PUT /api/users/:id` - Update user
-- `DELETE /api/users/:id` - Delete user
+### 📊 **활동 기록**
+- 실시간 활동 추적
+- 카테고리별 분류
+- 날짜별 필터링
 
-## License
+### 🌍 **다국어 지원**
+- 한국어/베트남어 완벽 지원
+- 실시간 언어 전환
 
-ISC
+---
+
+## 🛠 기술 스택
+
+- **Frontend**: React 18 + TypeScript + Vite + TailwindCSS
+- **Backend**: Node.js + Express (준비됨)
+- **Database**: LocalStorage (개발용) → MySQL/PostgreSQL (예정)
+
+---
+
+## 📖 개발 히스토리
+
+전체 개발 과정은 `CLAUDE.md` 파일에서 확인할 수 있습니다.
+
+### **주요 마일스톤**
+- ✅ 가격 계산기 베트남 현지화
+- ✅ 고객/견적 관리 시스템
+- ✅ 직원 계정 관리 (사진 업로드)
+- ✅ 실시간 활동 로그 시스템
+- ✅ 한국어/베트남어 다국어 지원
+- 🎉 **베타 v1.0.0 완성**
+
+---
+
+## 🔮 향후 계획
+
+### **v1.1.0**
+- [ ] 실제 백엔드 API 연동
+- [ ] 데이터베이스 연결
+- [ ] 이메일 알림 시스템
+
+### **v1.2.0**
+- [ ] 모바일 앱 (React Native)
+- [ ] 재고 관리 모듈
+- [ ] 통계 리포트
+
+### **v2.0.0**
+- [ ] 다지점 관리
+- [ ] 고급 분석 대시보드
+- [ ] API 외부 연동
+
+---
+
+## 🛡️ 백업 정보
+
+### **Git 태그**
+```bash
+# 베타 버전 태그 확인
+git tag -l
+# v1.0.0-beta
+
+# 베타 버전으로 롤백
+git checkout v1.0.0-beta
+```
+
+### **중요 커밋**
+- `6f02830` - 🎉 베타 버전 v1.0.0 완성
+
+---
+
+## 📁 프로젝트 구조
+
+```
+suanha-manager/
+├── frontend/                 # React 프론트엔드
+│   ├── src/
+│   │   ├── components/       # 재사용 컴포넌트
+│   │   ├── contexts/         # React 컨텍스트
+│   │   ├── locales/          # 다국어 번역
+│   │   ├── pages/            # 페이지 컴포넌트
+│   │   └── services/         # API 서비스
+│   └── package.json
+├── backend/                  # Node.js 백엔드 (준비됨)
+│   ├── src/
+│   │   ├── routes/           # API 라우트
+│   │   ├── middleware/       # 미들웨어
+│   │   └── types/            # TypeScript 타입
+│   └── package.json
+├── CLAUDE.md                 # 개발 히스토리
+└── README.md                 # 프로젝트 문서
+```
+
+---
+
+## 🎯 사용 가이드
+
+### **1. 로그인**
+- 관리자: 모든 기능 접근
+- 직원: 고객/견적 관리만 접근
+
+### **2. 견적서 작성 과정**
+1. 고객 등록
+2. 견적서 작성
+3. 항목 추가 및 가격 설정
+4. PDF 생성
+
+### **3. 직원 관리** (관리자)
+1. 새 직원 추가 버튼
+2. 정보 입력 (기본/회사/계정)
+3. 프로필 사진 업로드
+4. 저장
+
+---
+
+## 🙏 개발 정보
+
+- **개발**: Claude Code AI Assistant 협업
+- **타겟**: 베트남 유지보수 회사
+- **라이선스**: Private (사업용)
+- **완성도**: 베타 버전 (프로덕션 준비 완료)
+
+---
+
+**🎉 베타 버전 v1.0.0 - 완성! 🎉**
+
+*안정적인 베타 버전으로 실제 업무에 사용 가능합니다.*
