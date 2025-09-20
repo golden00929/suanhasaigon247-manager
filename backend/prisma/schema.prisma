@@ -15,11 +15,22 @@ model User {
   id        String   @id @default(cuid())
   email     String   @unique
   password  String
-  name      String
+  name      String   // username
   role      Role     @default(EMPLOYEE)
   isActive  Boolean  @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  // Additional employee information
+  fullName     String?
+  phone        String?
+  position     String?
+  department   String?
+  birthDate    DateTime?
+  hireDate     DateTime?
+  address      String?
+  profileImage String?
+  notes        String?
 
   // Relations
   quotations Quotation[]

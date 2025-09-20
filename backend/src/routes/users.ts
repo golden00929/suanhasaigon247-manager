@@ -29,6 +29,15 @@ router.get('/', authenticateToken, requireAdmin, async (req: AuthenticatedReques
           name: true,
           role: true,
           isActive: true,
+          fullName: true,
+          phone: true,
+          position: true,
+          department: true,
+          birthDate: true,
+          hireDate: true,
+          address: true,
+          profileImage: true,
+          notes: true,
           createdAt: true,
           updatedAt: true
         },
@@ -42,7 +51,7 @@ router.get('/', authenticateToken, requireAdmin, async (req: AuthenticatedReques
     const response: ApiResponse = {
       success: true,
       data: {
-        users,
+        items: users,
         pagination: {
           page: Number(page),
           limit: Number(limit),
@@ -95,6 +104,115 @@ router.get('/:id', authenticateToken, requireAdmin, async (req: AuthenticatedReq
     res.json(response);
   } catch (error) {
     console.error('Get user error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error'
+    });
+  }
+});
+
+// Create new user (Admin only)
+router.post('/', authenticateToken, requireAdmin, async (req: AuthenticatedRequest, res: Response) => {
+  try {
+    const {
+      email,
+      password,
+      username,
+      role,
+      isActive = true,
+      fullName,
+      phone,
+      position,
+      department,
+      birthDate,
+      hireDate,
+      address,
+      profileImage,
+      notes
+    } = req.body;
+
+    // Validate required fields
+    if (!email || !password || !username || !fullName) {
+      return res.status(400).json({
+        success: false,
+        message: 'Email, password, username, and full name are required'
+      });
+    }
+
+    // Check if email already exists
+    const existingEmail = await prisma.user.findUnique({
+      where: { email }
+    });
+
+    if (existingEmail) {
+      return res.status(400).json({
+        success: false,
+        message: 'Email already exists'
+      });
+    }
+
+    // Check if username already exists
+    const existingUsername = await prisma.user.findFirst({
+      where: { name: username }
+    });
+
+    if (existingUsername) {
+      return res.status(400).json({
+        success: false,
+        message: 'Username already exists'
+      });
+    }
+
+    // Hash password
+    const hashedPassword = await bcrypt.hash(password, 12);
+
+    // Create user
+    const newUser = await prisma.user.create({
+      data: {
+        email,
+        password: hashedPassword,
+        name: username,
+        role: role || 'EMPLOYEE',
+        isActive,
+        fullName,
+        phone,
+        position,
+        department,
+        birthDate: birthDate ? new Date(birthDate) : null,
+        hireDate: hireDate ? new Date(hireDate) : null,
+        address,
+        profileImage,
+        notes
+      },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+        isActive: true,
+        fullName: true,
+        phone: true,
+        position: true,
+        department: true,
+        birthDate: true,
+        hireDate: true,
+        address: true,
+        profileImage: true,
+        notes: true,
+        createdAt: true,
+        updatedAt: true
+      }
+    });
+
+    const response: ApiResponse = {
+      success: true,
+      data: newUser,
+      message: 'User created successfully'
+    };
+
+    res.status(201).json(response);
+  } catch (error) {
+    console.error('Create user error:', error);
     res.status(500).json({
       success: false,
       message: 'Internal server error'

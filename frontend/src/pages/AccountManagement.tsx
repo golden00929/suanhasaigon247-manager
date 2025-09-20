@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useActivityLog } from '../contexts/ActivityLogContext';
+import { userAPI } from '../services/api';
 
 interface UserAccount {
   id: string;
@@ -110,12 +111,22 @@ const AccountManagement: React.FC = () => {
   useEffect(() => {
     // 팝업창으로부터 메시지 받기
     const handleMessage = (event: MessageEvent) => {
+      console.log('메시지 수신:', event.data);
+
       if (event.data.type === 'NEW_EMPLOYEE') {
         const newEmployeeData = event.data.data;
+        console.log('NEW_EMPLOYEE 메시지 처리 시작');
         console.log('메인 창에서 받은 직원 데이터:', {
           ...newEmployeeData,
           profileImage: newEmployeeData.profileImage ? '사진 데이터 있음' : '사진 데이터 없음'
         });
+
+        // 필수 데이터 검증
+        if (!newEmployeeData.fullName || !newEmployeeData.email || !newEmployeeData.username) {
+          console.error('필수 데이터가 누락되었습니다:', newEmployeeData);
+          setError('❌ 필수 데이터가 누락되어 직원 추가에 실패했습니다.');
+          return;
+        }
 
         // 날짜 형식 변환 (dd/mm/yyyy -> yyyy-mm-dd)
         const convertDate = (dateStr: string) => {
@@ -128,31 +139,48 @@ const AccountManagement: React.FC = () => {
           return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
         };
 
-        setUsers(prevUsers => {
-          const newUser: UserAccount = {
-            id: String(prevUsers.length + 1),
-            username: newEmployeeData.username,
-            email: newEmployeeData.email,
-            password: newEmployeeData.password,
-            role: newEmployeeData.role,
-            isActive: newEmployeeData.isActive,
-            createdAt: new Date().toISOString(),
-            fullName: newEmployeeData.fullName,
-            phone: newEmployeeData.phone,
-            position: newEmployeeData.position,
-            department: newEmployeeData.department,
-            birthDate: convertDate(newEmployeeData.birthDate),
-            hireDate: convertDate(newEmployeeData.hireDate),
-            address: newEmployeeData.address,
-            profileImage: newEmployeeData.profileImage || '',
-            notes: newEmployeeData.notes
-          };
-          return [...prevUsers, newUser];
-        });
+        // 백엔드에 새 직원 추가
+        const addUserToBackend = async () => {
+          try {
+            const newUserData = {
+              username: newEmployeeData.username,
+              email: newEmployeeData.email,
+              password: newEmployeeData.password,
+              role: newEmployeeData.role,
+              isActive: newEmployeeData.isActive,
+              fullName: newEmployeeData.fullName,
+              phone: newEmployeeData.phone,
+              position: newEmployeeData.position,
+              department: newEmployeeData.department,
+              birthDate: convertDate(newEmployeeData.birthDate),
+              hireDate: convertDate(newEmployeeData.hireDate),
+              address: newEmployeeData.address,
+              profileImage: newEmployeeData.profileImage || '',
+              notes: newEmployeeData.notes
+            };
 
-        addLog('직원 추가', `새 직원 '${newEmployeeData.fullName}'을 추가했습니다.`, '계정 관리', 'account');
-        setError('✅ 새 직원이 성공적으로 추가되었습니다.');
-        setTimeout(() => setError(null), 3000);
+            console.log('백엔드로 전송할 직원 데이터:', newUserData);
+
+            const response = await userAPI.createUser(newUserData);
+            if (response.success && response.data) {
+              console.log('백엔드 응답:', response.data);
+
+              // 성공시 사용자 목록 새로고침
+              await fetchUsers();
+
+              addLog('직원 추가', `새 직원 '${newEmployeeData.fullName}'을 추가했습니다.`, '계정 관리', 'account');
+              setError('✅ 새 직원이 성공적으로 추가되었습니다.');
+              setTimeout(() => setError(null), 3000);
+            } else {
+              throw new Error(response.message || '직원 추가에 실패했습니다.');
+            }
+          } catch (error) {
+            console.error('직원 추가 중 오류:', error);
+            setError('❌ 직원 추가에 실패했습니다: ' + (error.message || '알 수 없는 오류'));
+          }
+        };
+
+        addUserToBackend();
 
         // 팝업 창 상태 정리
         setPopupWindow(null);
@@ -645,22 +673,56 @@ const AccountManagement: React.FC = () => {
       // 폼 제출 처리
       htmlContent += 'document.getElementById("employeeForm").addEventListener("submit", function(e) {';
       htmlContent += 'e.preventDefault();';
+      htmlContent += 'console.log("폼 제출 시작");';
+
+      // 필수 필드 검증
+      htmlContent += 'const fullName = document.getElementById("fullName").value.trim();';
+      htmlContent += 'const email = document.getElementById("email").value.trim();';
+      htmlContent += 'const phone = document.getElementById("phone").value.trim();';
+      htmlContent += 'const department = document.getElementById("department").value.trim();';
+      htmlContent += 'const position = document.getElementById("position").value.trim();';
+      htmlContent += 'const hireDate = document.getElementById("hireDate").value.trim();';
+      htmlContent += 'const username = document.getElementById("username").value.trim();';
+      htmlContent += 'const password = document.getElementById("password").value.trim();';
+
+      htmlContent += 'if (!fullName || !email || !phone || !department || !position || !hireDate || !username || !password) {';
+      htmlContent += 'alert("필수 항목을 모두 입력해주세요.\\n\\n필수 항목:\\n- 성명\\n- 이메일\\n- 전화번호\\n- 부서\\n- 직급\\n- 입사일\\n- 아이디\\n- 비밀번호");';
+      htmlContent += 'return;';
+      htmlContent += '}';
+
+      // 이메일 형식 검증
+      htmlContent += 'const emailRegex = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/;';
+      htmlContent += 'if (!emailRegex.test(email)) {';
+      htmlContent += 'alert("올바른 이메일 형식을 입력해주세요.");';
+      htmlContent += 'return;';
+      htmlContent += '}';
+
       htmlContent += 'const formData = {';
-      htmlContent += 'fullName: document.getElementById("fullName").value,';
-      htmlContent += 'phone: document.getElementById("phone").value,';
+      htmlContent += 'fullName: fullName,';
+      htmlContent += 'phone: phone,';
       htmlContent += 'birthDate: document.getElementById("birthDate").value,';
-      htmlContent += 'email: document.getElementById("email").value,';
+      htmlContent += 'email: email,';
       htmlContent += 'address: document.getElementById("address").value,';
-      htmlContent += 'department: document.getElementById("department").value,';
-      htmlContent += 'position: document.getElementById("position").value,';
-      htmlContent += 'hireDate: document.getElementById("hireDate").value,';
+      htmlContent += 'department: department,';
+      htmlContent += 'position: position,';
+      htmlContent += 'hireDate: hireDate,';
       htmlContent += 'role: document.getElementById("role").value,';
       htmlContent += 'notes: document.getElementById("notes").value,';
-      htmlContent += 'username: document.getElementById("username").value,';
-      htmlContent += 'password: document.getElementById("password").value,';
+      htmlContent += 'username: username,';
+      htmlContent += 'password: password,';
       htmlContent += 'isActive: document.getElementById("isActive").checked,';
-      htmlContent += 'profileImage: selectedPhotoDataUrl };';
-      htmlContent += 'if (window.opener) { window.opener.postMessage({ type: "NEW_EMPLOYEE", data: formData }, "*"); }';
+      htmlContent += 'profileImage: selectedPhotoDataUrl || "" };';
+
+      htmlContent += 'console.log("전송할 데이터:", formData);';
+      htmlContent += 'if (window.opener) { ';
+      htmlContent += 'console.log("부모 창에 메시지 전송 중...");';
+      htmlContent += 'window.opener.postMessage({ type: "NEW_EMPLOYEE", data: formData }, "*"); ';
+      htmlContent += 'console.log("메시지 전송 완료");';
+      htmlContent += '} else { ';
+      htmlContent += 'console.error("부모 창을 찾을 수 없습니다.");';
+      htmlContent += 'alert("오류: 부모 창과의 연결이 끊어졌습니다. 창을 닫고 다시 시도해주세요.");';
+      htmlContent += 'return;';
+      htmlContent += '}';
       htmlContent += 'setTimeout(() => window.close(), 100); });';
       htmlContent += '</script></body></html>';
 
@@ -673,68 +735,17 @@ const AccountManagement: React.FC = () => {
     try {
       setLoading(true);
       addLog('페이지 접속', '계정 관리 페이지에 접속했습니다.', '계정 관리', 'account');
-      // 목업 데이터
-      const mockUsers: UserAccount[] = [
-        {
-          id: '1',
-          username: 'admin',
-          email: 'admin@company.com',
-          password: 'admin123',
-          role: 'ADMIN',
-          isActive: true,
-          createdAt: '2024-01-15T09:00:00Z',
-          lastLoginAt: '2024-01-20T08:30:00Z',
-          fullName: '김관리자',
-          phone: '010-1234-5678',
-          position: '시스템 관리자',
-          department: 'IT팀',
-          birthDate: '1985-03-15',
-          hireDate: '2020-01-15',
-          address: '서울시 강남구 테헤란로 123',
-          notes: '시스템 총괄 관리 담당'
-        },
-        {
-          id: '2',
-          username: 'employee1',
-          email: 'employee1@company.com',
-          password: 'emp123',
-          role: 'EMPLOYEE',
-          isActive: true,
-          createdAt: '2024-01-16T10:00:00Z',
-          lastLoginAt: '2024-01-19T17:45:00Z',
-          fullName: '이직원',
-          phone: '010-9876-5432',
-          position: '주임',
-          department: '영업팀',
-          birthDate: '1990-07-22',
-          hireDate: '2022-03-01',
-          address: '서울시 서초구 서초대로 456'
-        },
-        {
-          id: '3',
-          username: 'manager1',
-          email: 'manager1@company.com',
-          password: 'mgr123',
-          role: 'EMPLOYEE',
-          isActive: false,
-          createdAt: '2024-01-17T11:00:00Z',
-          fullName: '박팀장',
-          phone: '010-5555-7777',
-          position: '팀장',
-          department: '기술팀',
-          birthDate: '1982-11-08',
-          hireDate: '2019-06-15',
-          address: '경기도 성남시 분당구 정자로 789',
-          notes: '기술 개발 팀장, 현재 휴직 중'
-        }
-      ];
 
-      setTimeout(() => {
-        setUsers(mockUsers);
-        setLoading(false);
-      }, 500);
+      const response = await userAPI.getUsers();
+      if (response.success && response.data) {
+        setUsers(response.data.items || []);
+      } else {
+        setError('사용자 목록을 불러오는 데 실패했습니다.');
+      }
+      setLoading(false);
     } catch (err) {
-      setError('사용자 목록을 불러오는 중 오류가 발생했습니다.');
+      console.error('사용자 데이터 로딩 중 오류:', err);
+      setError('사용자 목록을 불러오는 데 실패했습니다.');
       setLoading(false);
     }
   };

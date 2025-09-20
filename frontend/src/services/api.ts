@@ -171,6 +171,11 @@ export const userAPI = {
     return response.data;
   },
 
+  createUser: async (user: Omit<User, 'id' | 'createdAt' | 'updatedAt'>): Promise<ApiResponse<User>> => {
+    const response: AxiosResponse<ApiResponse<User>> = await api.post('/users', user);
+    return response.data;
+  },
+
   updateUser: async (id: string, user: Partial<User>): Promise<ApiResponse<User>> => {
     const response: AxiosResponse<ApiResponse<User>> = await api.put(`/users/${id}`, user);
     return response.data;
