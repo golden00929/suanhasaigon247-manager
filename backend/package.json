@@ -5,7 +5,7 @@
   "type": "module",
   "main": "dist/app.js",
   "scripts": {
-    "build": "prisma generate",
+    "build": "npm install && prisma generate && prisma migrate deploy",
     "start": "npx tsx src/app.ts",
     "dev": "npx tsx watch src/app.ts",
     "db:generate": "prisma generate",
@@ -14,7 +14,7 @@
     "db:migrate:dev": "prisma migrate dev",
     "db:studio": "prisma studio",
     "db:seed": "npx tsx prisma/seed.ts",
-    "postbuild": "prisma migrate deploy && npm run db:seed",
+    "poststart": "npm run db:seed",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
@@ -25,6 +25,9 @@
   ],
   "author": "Suanha Saigon 247",
   "license": "ISC",
+  "engines": {
+    "node": "18.x"
+  },
   "dependencies": {
     "@prisma/client": "^6.16.2",
     "bcryptjs": "^3.0.2",
