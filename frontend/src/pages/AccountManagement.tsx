@@ -85,7 +85,6 @@ const AccountManagement: React.FC = () => {
         const addUserToBackend = async () => {
           try {
             const newUserData = {
-              name: newEmployeeData.username,
               username: newEmployeeData.username,
               email: newEmployeeData.email,
               password: newEmployeeData.password,
