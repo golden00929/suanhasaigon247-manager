@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useActivityLog } from '../contexts/ActivityLogContext';
 import { Customer } from '../types';
-import { customerAPI } from '../services/api';
 
 const CustomerManagement: React.FC = () => {
   const { t } = useLanguage();
@@ -35,50 +34,68 @@ const CustomerManagement: React.FC = () => {
       setLoading(true);
       addLog('페이지 접속', '고객 관리 페이지에 접속했습니다.', '고객 관리', 'customer');
       // Mock data for demonstration
-      const mockCustomers = [
+      const mockCustomers: Customer[] = [
         {
-          id: 1,
+          id: '1',
+          customerName: '김철수',
           name: '김철수',
+          companyName: '김철수',
           phone: '010-1234-5678',
           address: '서울특별시 강남구 테헤란로 123',
           notes: '정기 고객, VIP 등급',
           repairHistory: '2024.01.15 - 화장실 수전 교체\n2023.11.20 - 싱크대 배수관 청소\n2023.09.10 - 보일러 점검 및 필터 교체',
-          customerType: 'individual'
+          customerType: 'individual',
+          createdAt: '2024-01-01T00:00:00Z',
+          updatedAt: '2024-01-01T00:00:00Z',
+          addresses: []
         },
         {
-          id: 2,
+          id: '2',
+          customerName: '이영희',
           name: '이영희',
+          companyName: '이영희',
           phone: '010-9876-5432',
           address: '부산광역시 해운대구 해운대로 456',
           notes: '신축 아파트, 정리정돈 깔끔함',
           repairHistory: '2024.02.03 - 에어컨 청소 및 가스 충전\n2023.12.18 - 세탁기 급수호스 교체',
-          customerType: 'individual'
+          customerType: 'individual',
+          createdAt: '2024-01-01T00:00:00Z',
+          updatedAt: '2024-01-01T00:00:00Z',
+          addresses: []
         },
         {
-          id: 3,
+          id: '3',
+          customerName: '박민수',
           name: '박민수',
+          companyName: '박민수 전기상사',
           phone: '010-5555-1234',
           address: '대구광역시 중구 동성로 789',
           notes: '상업용 건물, 24시간 운영',
           repairHistory: '2024.01.28 - 냉장고 컴프레서 수리\n2023.10.15 - 전기 콘센트 10개 교체\n2023.08.22 - 환풍기 모터 교체',
           customerType: 'business',
           businessNumber: '123-45-67890',
-          companyName: '박민수 전기상사',
           representative: '박민수',
-          businessAddress: '대구광역시 중구 동성로 789'
+          businessAddress: '대구광역시 중구 동성로 789',
+          createdAt: '2024-01-01T00:00:00Z',
+          updatedAt: '2024-01-01T00:00:00Z',
+          addresses: []
         },
         {
-          id: 4,
+          id: '4',
+          customerName: '최수정',
           name: '최수정',
+          companyName: '수정가스서비스',
           phone: '010-7777-8888',
           address: '인천광역시 연수구 송도동 321',
           notes: '빠른 서비스 선호, 오전 시간대 가능',
           repairHistory: '2024.02.10 - 가스레인지 점화장치 수리\n2024.01.05 - 샤워기 헤드 교체',
           customerType: 'business',
           businessNumber: '456-78-90123',
-          companyName: '수정가스서비스',
           representative: '최수정',
-          businessAddress: '인천광역시 연수구 송도동 321'
+          businessAddress: '인천광역시 연수구 송도동 321',
+          createdAt: '2024-01-01T00:00:00Z',
+          updatedAt: '2024-01-01T00:00:00Z',
+          addresses: []
         }
       ];
       setCustomers(mockCustomers);

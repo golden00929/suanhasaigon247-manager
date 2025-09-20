@@ -59,8 +59,8 @@ export const ActivityLogProvider: React.FC<ActivityLogProviderProps> = ({ childr
 
     const newLog: ActivityLog = {
       id: `log_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-      userId: user.id || user.username,
-      userName: user.name || user.username,
+      userId: user.id || user.name,
+      userName: user.name || user.username || user.name,
       action,
       details,
       page,
@@ -72,7 +72,7 @@ export const ActivityLogProvider: React.FC<ActivityLogProviderProps> = ({ childr
   };
 
   const getUserLogs = (userId?: string) => {
-    const targetUserId = userId || user?.id || user?.username;
+    const targetUserId = userId || user?.id || user?.name;
     if (!targetUserId) return [];
 
     return logs.filter(log => log.userId === targetUserId);

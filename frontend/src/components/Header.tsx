@@ -1,11 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { useLanguage } from '../contexts/LanguageContext';
 
 const Header: React.FC = () => {
   const { user, logout } = useAuth();
   const { t, language, setLanguage } = useLanguage();
-  const [showUserMenu, setShowUserMenu] = useState(false);
 
   const handleLogout = () => {
     if (window.confirm(t('auth.logoutConfirm'))) {

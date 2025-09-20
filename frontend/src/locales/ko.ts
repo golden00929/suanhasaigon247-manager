@@ -137,7 +137,7 @@ export const ko = {
     unitPrice: '단가',
     subtotal: '소계',
     tax: '부가세',
-    totalAmount: '총액',
+    totalAmountQuote: '총액',
     description: '설명',
     notes: '메모',
     search: '견적서 검색',

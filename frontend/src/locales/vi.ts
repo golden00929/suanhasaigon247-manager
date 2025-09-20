@@ -137,7 +137,7 @@ export const vi = {
     unitPrice: 'Đơn giá',
     subtotal: 'Tạm tính',
     tax: 'Thuế',
-    totalAmount: 'Tổng tiền',
+    totalAmountQuote: 'Tổng tiền',
     description: 'Mô tả',
     notes: 'Ghi chú',
     search: 'Tìm kiếm báo giá',

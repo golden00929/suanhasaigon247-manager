@@ -2,10 +2,21 @@ export interface User {
   id: string;
   email: string;
   name: string;
+  username?: string;
   role: 'ADMIN' | 'EMPLOYEE';
   isActive: boolean;
   createdAt: string;
   updatedAt: string;
+  // Additional employee information
+  fullName?: string;
+  phone?: string;
+  position?: string;
+  department?: string;
+  birthDate?: string;
+  hireDate?: string;
+  address?: string;
+  profileImage?: string;
+  notes?: string;
 }
 
 export interface LoginRequest {
@@ -19,8 +30,9 @@ export interface LoginResponse {
 }
 
 export interface Customer {
-  id: string;
+  id: string | number;
   customerName: string;
+  name?: string;
   companyName: string;
   phone: string;
   email?: string;
@@ -30,6 +42,14 @@ export interface Customer {
   updatedAt: string;
   addresses: CustomerAddress[];
   quotations?: Quotation[];
+  // Additional customer fields for compatibility
+  address?: string;
+  notes?: string;
+  repairHistory?: string;
+  customerType?: string;
+  businessNumber?: string;
+  representative?: string;
+  businessAddress?: string;
 }
 
 export interface CustomerAddress {
@@ -43,11 +63,11 @@ export interface CustomerAddress {
 }
 
 export interface Quotation {
-  id: string;
+  id: string | number;
   quotationNumber: string;
-  customerId: string;
-  customerAddressId: string;
-  status: 'DRAFT' | 'REVIEWED' | 'SENT' | 'CONTRACTED' | 'CANCELLED';
+  customerId: string | number;
+  customerAddressId?: string;
+  status: 'DRAFT' | 'REVIEWED' | 'SENT' | 'CONTRACTED' | 'CANCELLED' | 'draft' | 'sent' | 'accepted' | 'rejected';
   materialCost: number;
   laborCost: number;
   travelCost: number;
@@ -60,10 +80,15 @@ export interface Quotation {
   validUntil?: string;
   createdAt: string;
   updatedAt: string;
-  customer: Customer;
-  customerAddress: CustomerAddress;
-  creator: User;
+  customer?: Customer;
+  customerAddress?: CustomerAddress;
+  creator?: User;
   items: QuotationItem[];
+  // Additional fields for compatibility
+  title?: string;
+  description?: string;
+  totalAmount?: number;
+  notes?: string;
 }
 
 export interface QuotationItem {
@@ -71,11 +96,13 @@ export interface QuotationItem {
   quotationId: string;
   categoryId: string;
   itemName: string;
+  name?: string;
   quantity: number;
   unitPrice: number;
   amount: number;
+  total?: number;
   laborHours: number;
-  category: PriceCategory;
+  category?: PriceCategory;
 }
 
 export interface PriceCategory {

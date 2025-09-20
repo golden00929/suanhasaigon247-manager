@@ -25,7 +25,7 @@ interface UserAccount {
 }
 
 const AccountManagement: React.FC = () => {
-  const { t } = useLanguage();
+  const { } = useLanguage();
   const { addLog } = useActivityLog();
 
   const formatDate = (dateString: string) => {
@@ -37,72 +37,14 @@ const AccountManagement: React.FC = () => {
     return `${day}/${month}/${year}`;
   };
 
-  const formatDateForInput = (dateString: string) => {
-    if (!dateString) return '';
-    // YYYY-MM-DD를 DD/MM/YYYY로 변환
-    if (dateString.includes('-')) {
-      const [year, month, day] = dateString.split('-');
-      return `${day}/${month}/${year}`;
-    }
-    return dateString;
-  };
 
-  const handleDateInput = (value: string, field: 'birthDate' | 'hireDate') => {
-    // 숫자와 슬래시만 허용
-    const cleanValue = value.replace(/[^\d/]/g, '');
-
-    // DD/MM/YYYY 형식으로 자동 포맷팅
-    let formattedValue = cleanValue;
-    if (cleanValue.length >= 2 && !cleanValue.includes('/')) {
-      formattedValue = cleanValue.substring(0, 2) + '/' + cleanValue.substring(2);
-    }
-    if (cleanValue.length >= 5 && cleanValue.split('/').length === 2) {
-      const parts = cleanValue.split('/');
-      formattedValue = parts[0] + '/' + parts[1].substring(0, 2) + '/' + parts[1].substring(2);
-    }
-
-    // YYYY-MM-DD 형식으로 변환하여 저장
-    let isoDate = '';
-    if (formattedValue.length === 10) {
-      const parts = formattedValue.split('/');
-      if (parts.length === 3) {
-        const [day, month, year] = parts;
-        if (day && month && year && day.length === 2 && month.length === 2 && year.length === 4) {
-          isoDate = `${year}-${month}-${day}`;
-        }
-      }
-    }
-
-    setFormData({ ...formData, [field]: isoDate || formattedValue });
-  };
   const [users, setUsers] = useState<UserAccount[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [showModal, setShowModal] = useState(false);
-  const [editingUser, setEditingUser] = useState<UserAccount | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [roleFilter, setRoleFilter] = useState<string>('all');
-  const [showPasswords, setShowPasswords] = useState(false);
-  const [showDetailModal, setShowDetailModal] = useState(false);
-  const [selectedUser, setSelectedUser] = useState<UserAccount | null>(null);
   const [popupWindow, setPopupWindow] = useState<Window | null>(null);
   const [detailPopupWindow, setDetailPopupWindow] = useState<Window | null>(null);
-  const [formData, setFormData] = useState({
-    username: '',
-    email: '',
-    password: '',
-    role: 'EMPLOYEE' as 'ADMIN' | 'EMPLOYEE',
-    isActive: true,
-    fullName: '',
-    phone: '',
-    position: '',
-    department: '',
-    birthDate: '',
-    hireDate: '',
-    address: '',
-    profileImage: '',
-    notes: ''
-  });
 
   useEffect(() => {
     fetchUsers();
@@ -143,6 +85,7 @@ const AccountManagement: React.FC = () => {
         const addUserToBackend = async () => {
           try {
             const newUserData = {
+              name: newEmployeeData.username,
               username: newEmployeeData.username,
               email: newEmployeeData.email,
               password: newEmployeeData.password,
@@ -176,7 +119,7 @@ const AccountManagement: React.FC = () => {
             }
           } catch (error) {
             console.error('직원 추가 중 오류:', error);
-            setError('❌ 직원 추가에 실패했습니다: ' + (error.message || '알 수 없는 오류'));
+            setError('❌ 직원 추가에 실패했습니다: ' + ((error as Error).message || '알 수 없는 오류'));
           }
         };
 
@@ -738,7 +681,7 @@ const AccountManagement: React.FC = () => {
 
       const response = await userAPI.getUsers();
       if (response.success && response.data) {
-        setUsers(response.data.items || []);
+        setUsers(response.data.data || []);
       } else {
         setError('사용자 목록을 불러오는 데 실패했습니다.');
       }
