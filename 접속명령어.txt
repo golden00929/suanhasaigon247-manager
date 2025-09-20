@@ -1,0 +1,2 @@
+터미널에서  D:\Development\projects\2. suanha manager\backend> npm run dev
+터미널에서  D:\Development\projects\2. suanha manager\frontend> npm run dev

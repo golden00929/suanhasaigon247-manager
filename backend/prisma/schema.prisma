@@ -1,0 +1,154 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "windows"]
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String
+  role      Role     @default(EMPLOYEE)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  quotations Quotation[]
+  priceCategories PriceCategory[]
+
+  @@map("users")
+}
+
+model Customer {
+  id              String   @id @default(cuid())
+  customerName    String
+  companyName     String
+  phone           String
+  email           String?
+  memo            String?
+  lastContactDate DateTime?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // Relations
+  addresses   CustomerAddress[]
+  quotations  Quotation[]
+
+  @@map("customers")
+}
+
+model CustomerAddress {
+  id         String   @id @default(cuid())
+  customerId String
+  name       String   // 현장명 (예: "본사", "1공장")
+  address    String
+  isMain     Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  // Relations
+  customer   Customer   @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  quotations Quotation[]
+
+  @@map("customer_addresses")
+}
+
+model Quotation {
+  id                String        @id @default(cuid())
+  quotationNumber   String        @unique
+  customerId        String
+  customerAddressId String
+  status            QuotationStatus @default(DRAFT)
+  materialCost      Float         @default(0)
+  laborCost         Float         @default(0)
+  travelCost       Float         @default(0)
+  marginRate        Float         @default(15)
+  subtotal          Float         @default(0)
+  tax               Float         @default(0)
+  total             Float         @default(0)
+  createdBy         String
+  sentAt            DateTime?
+  validUntil        DateTime?
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+
+  // Relations
+  customer        Customer         @relation(fields: [customerId], references: [id])
+  customerAddress CustomerAddress  @relation(fields: [customerAddressId], references: [id])
+  creator         User             @relation(fields: [createdBy], references: [id])
+  items           QuotationItem[]
+
+  @@map("quotations")
+}
+
+model QuotationItem {
+  id           String  @id @default(cuid())
+  quotationId  String
+  categoryId   String
+  itemName     String
+  quantity     Float
+  unitPrice    Float
+  amount       Float
+  laborHours   Float   @default(0)
+
+  // Relations
+  quotation Quotation @relation(fields: [quotationId], references: [id], onDelete: Cascade)
+  category  PriceCategory @relation(fields: [categoryId], references: [id])
+
+  @@map("quotation_items")
+}
+
+model PriceCategory {
+  id        String   @id @default(cuid())
+  name      String
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  createdBy String
+
+  // Relations
+  creator User            @relation(fields: [createdBy], references: [id])
+  items   PriceItem[]
+  quotationItems QuotationItem[]
+
+  @@map("price_categories")
+}
+
+model PriceItem {
+  id          String  @id @default(cuid())
+  categoryId  String
+  itemName    String
+  unit        String
+  unitPrice   Float
+  laborHours  Float   @default(0)
+  isActive    Boolean @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  category PriceCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@map("price_items")
+}
+
+enum Role {
+  ADMIN
+  EMPLOYEE
+}
+
+enum QuotationStatus {
+  DRAFT
+  REVIEWED
+  SENT
+  CONTRACTED
+  CANCELLED
+}
