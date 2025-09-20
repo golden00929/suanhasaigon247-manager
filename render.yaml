@@ -1,9 +1,11 @@
 services:
   - type: web
     name: suanha-manager-backend
-    env: node
-    buildCommand: cd backend && npm install && npm run build
-    startCommand: cd backend && npm start
+    runtime: node
+    rootDir: backend
+    plan: free
+    buildCommand: npm install && npm run build
+    startCommand: npm start
     envVars:
       - key: NODE_ENV
         value: production
@@ -16,7 +18,7 @@ services:
       - key: JWT_SECRET
         generateValue: true
       - key: FRONTEND_URL
-        value: https://your-netlify-app.netlify.app
+        sync: false
 
 databases:
   - name: suanha-manager-db
