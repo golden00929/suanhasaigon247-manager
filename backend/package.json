@@ -5,8 +5,8 @@
   "type": "module",
   "main": "dist/app.js",
   "scripts": {
-    "build": "npm install && prisma generate && prisma migrate deploy",
-    "start": "npx tsx src/app.ts",
+    "build": "prisma generate",
+    "start": "prisma migrate deploy && npx tsx prisma/seed.ts && npx tsx src/app.ts",
     "dev": "npx tsx watch src/app.ts",
     "db:generate": "prisma generate",
     "db:push": "prisma db push",
@@ -14,7 +14,6 @@
     "db:migrate:dev": "prisma migrate dev",
     "db:studio": "prisma studio",
     "db:seed": "npx tsx prisma/seed.ts",
-    "poststart": "npm run db:seed",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
