@@ -67,13 +67,12 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
     <div
       className={`
         sidebar-gradient shadow-2xl relative z-30 transform transition-transform duration-300 ease-in-out
-        lg:translate-x-0 lg:static lg:inset-0
-        ${isOpen ? 'translate-x-0' : '-translate-x-full'}
-        fixed inset-y-0 left-0 w-64 lg:w-64
+        ${isOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
+        fixed inset-y-0 left-0 w-64 md:static md:transform-none
       `}
     >
       {/* Close button for mobile */}
-      <div className="lg:hidden absolute top-4 right-4 z-40">
+      <div className="md:hidden absolute top-4 right-4 z-40">
         <button
           onClick={onClose}
           className="text-white hover:text-gray-300 focus:outline-none"
