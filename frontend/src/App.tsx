@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { LanguageProvider } from './contexts/LanguageContext';
@@ -15,12 +15,23 @@ import AccountManagement from './pages/AccountManagement';
 import ActivityLog from './pages/ActivityLog';
 
 const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
   return (
-    <div style={{display: 'flex', height: '100vh', backgroundColor: '#f9fafb'}}>
-      <Sidebar />
-      <div style={{flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden'}}>
-        <Header />
-        <main style={{flex: 1, overflowX: 'hidden', overflowY: 'auto'}}>
+    <div className="flex h-screen bg-gray-50">
+      {/* Mobile backdrop */}
+      {sidebarOpen && (
+        <div
+          className="fixed inset-0 z-20 bg-black bg-opacity-50 lg:hidden"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+
+      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+
+      <div className="flex-1 flex flex-col overflow-hidden">
+        <Header onMenuClick={() => setSidebarOpen(true)} />
+        <main className="flex-1 overflow-x-hidden overflow-y-auto p-4 lg:p-6">
           {children}
         </main>
       </div>

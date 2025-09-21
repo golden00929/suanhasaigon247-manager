@@ -762,10 +762,10 @@ const AccountManagement: React.FC = () => {
   }
 
   return (
-    <div className="p-6">
-      <div className="mb-6">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">계정 관리</h1>
-        <p className="text-gray-600">직원 계정을 관리하고 권한을 설정합니다.</p>
+    <div className="p-4 lg:p-6">
+      <div className="mb-4 lg:mb-6">
+        <h1 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-2">계정 관리</h1>
+        <p className="text-sm lg:text-base text-gray-600">직원 계정을 관리하고 권한을 설정합니다.</p>
       </div>
 
       {error && (
@@ -812,7 +812,93 @@ const AccountManagement: React.FC = () => {
         <span>관리자: {filteredUsers.filter(u => u.role === 'ADMIN').length}</span>
       </div>
 
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+      {/* Mobile Card View */}
+      <div className="block lg:hidden space-y-4">
+        {filteredUsers.length === 0 ? (
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 text-center">
+            <div className="text-gray-500 text-lg mb-2">👥</div>
+            <p className="text-gray-600 mb-2">표시할 사용자가 없습니다</p>
+            <p className="text-sm text-gray-500">검색 조건을 변경하거나 새 직원을 추가해보세요</p>
+          </div>
+        ) : (
+          filteredUsers.map((user) => (
+          <div key={user.id} className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+            <div className="flex items-start space-x-4">
+              {/* Profile Image */}
+              <div className="flex-shrink-0">
+                {user.profileImage ? (
+                  <img
+                    src={user.profileImage}
+                    alt={user.fullName}
+                    className="w-16 h-16 rounded-full object-cover"
+                  />
+                ) : (
+                  <div className="w-16 h-16 bg-gray-300 rounded-full flex items-center justify-center text-gray-600 font-medium text-lg">
+                    {user.fullName ? user.fullName.charAt(0) : user.username.charAt(0)}
+                  </div>
+                )}
+              </div>
+
+              {/* User Info */}
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center justify-between mb-2">
+                  <h3 className="text-lg font-semibold text-gray-900 truncate">{user.fullName}</h3>
+                  <div className="flex space-x-1">
+                    <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                      user.isActive ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                    }`}>
+                      {user.isActive ? '활성' : '비활성'}
+                    </span>
+                    <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                      user.role === 'ADMIN' ? 'bg-purple-100 text-purple-800' : 'bg-blue-100 text-blue-800'
+                    }`}>
+                      {user.role === 'ADMIN' ? '관리자' : '직원'}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 gap-1 text-sm text-gray-600">
+                  <div><span className="font-medium">사용자명:</span> {user.username}</div>
+                  <div><span className="font-medium">이메일:</span> {user.email}</div>
+                  {user.phone && <div><span className="font-medium">전화:</span> {user.phone}</div>}
+                  <div><span className="font-medium">부서:</span> {user.department} / {user.position}</div>
+                  <div><span className="font-medium">가입일:</span> {formatDate(user.createdAt)}</div>
+                </div>
+
+                {/* Action Buttons */}
+                <div className="flex flex-wrap gap-2 mt-3">
+                  <button
+                    onClick={() => handleViewDetails(user)}
+                    className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1.5 rounded-md text-xs font-medium transition-colors"
+                  >
+                    상세보기
+                  </button>
+                  <button
+                    onClick={() => handleToggleStatus(user.id)}
+                    className={`${
+                      user.isActive
+                        ? 'bg-orange-500 hover:bg-orange-600'
+                        : 'bg-green-500 hover:bg-green-600'
+                    } text-white px-3 py-1.5 rounded-md text-xs font-medium transition-colors`}
+                  >
+                    {user.isActive ? '비활성화' : '활성화'}
+                  </button>
+                  <button
+                    onClick={() => handleDeleteUser(user.id)}
+                    className="bg-red-500 hover:bg-red-600 text-white px-3 py-1.5 rounded-md text-xs font-medium transition-colors"
+                  >
+                    삭제
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          ))
+        )}
+      </div>
+
+      {/* Desktop Table View */}
+      <div className="hidden lg:block bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="min-w-full table-fixed">
             <thead className="bg-gray-50">

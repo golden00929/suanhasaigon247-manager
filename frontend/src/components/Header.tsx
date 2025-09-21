@@ -2,7 +2,11 @@ import React from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { useLanguage } from '../contexts/LanguageContext';
 
-const Header: React.FC = () => {
+interface HeaderProps {
+  onMenuClick: () => void;
+}
+
+const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
   const { user, logout } = useAuth();
   const { t, language, setLanguage } = useLanguage();
 
@@ -13,18 +17,28 @@ const Header: React.FC = () => {
   };
 
   return (
-    <header style={{backgroundColor: 'white', padding: '20px 24px', borderBottom: '1px solid #e5e7eb', display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: '80px', flexShrink: 0}}>
-      <div style={{display: 'flex', alignItems: 'center', gap: '12px', marginLeft: '40px'}}>
-        <h2 style={{fontSize: '18px', fontWeight: '600', color: '#6b7280', margin: 0}}>
+    <header className="bg-white px-4 lg:px-6 py-4 border-b border-gray-200 flex items-center justify-between h-16 lg:h-20 flex-shrink-0">
+      <div className="flex items-center gap-3">
+        {/* Mobile menu button */}
+        <button
+          onClick={onMenuClick}
+          className="lg:hidden p-2 rounded-md text-gray-500 hover:text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500"
+        >
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+
+        <h2 className="text-base lg:text-lg font-semibold text-gray-600 truncate">
           {t('auth.welcome')}, {user?.name}
         </h2>
       </div>
 
-      <div style={{display: 'flex', alignItems: 'center', gap: '16px'}}>
-        {/* System Status */}
-        <div style={{display: 'flex', alignItems: 'center', gap: '16px', fontSize: '14px', color: '#6b7280'}}>
-          <div style={{display: 'flex', alignItems: 'center', gap: '8px'}}>
-            <span style={{width: '8px', height: '8px', backgroundColor: '#10b981', borderRadius: '50%'}} className="animate-pulse"></span>
+      <div className="flex items-center gap-2 lg:gap-4">
+        {/* System Status - Hidden on mobile */}
+        <div className="hidden lg:flex items-center gap-4 text-sm text-gray-500">
+          <div className="flex items-center gap-2">
+            <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
             <span>System Online</span>
           </div>
           <div>
@@ -33,31 +47,21 @@ const Header: React.FC = () => {
         </div>
 
         {/* Language Switcher */}
-        <div style={{display: 'flex', alignItems: 'center', gap: '8px', fontSize: '14px'}}>
+        <div className="flex items-center gap-1 lg:gap-2 text-sm">
           <button
             onClick={() => setLanguage('ko')}
-            style={{
-              padding: '4px 8px',
-              backgroundColor: 'transparent',
-              border: 'none',
-              color: language === 'ko' ? '#2563eb' : '#6b7280',
-              fontWeight: language === 'ko' ? '600' : '400',
-              cursor: 'pointer'
-            }}
+            className={`px-2 py-1 bg-transparent border-none cursor-pointer ${
+              language === 'ko' ? 'text-blue-600 font-semibold' : 'text-gray-500 font-normal'
+            }`}
           >
             KO
           </button>
-          <span style={{color: '#d1d5db'}}>|</span>
+          <span className="text-gray-300">|</span>
           <button
             onClick={() => setLanguage('vi')}
-            style={{
-              padding: '4px 8px',
-              backgroundColor: 'transparent',
-              border: 'none',
-              color: language === 'vi' ? '#2563eb' : '#6b7280',
-              fontWeight: language === 'vi' ? '600' : '400',
-              cursor: 'pointer'
-            }}
+            className={`px-2 py-1 bg-transparent border-none cursor-pointer ${
+              language === 'vi' ? 'text-blue-600 font-semibold' : 'text-gray-500 font-normal'
+            }`}
           >
             VN
           </button>
@@ -66,17 +70,10 @@ const Header: React.FC = () => {
         {/* Logout Button */}
         <button
           onClick={handleLogout}
-          style={{
-            padding: '8px',
-            backgroundColor: 'transparent',
-            border: 'none',
-            color: '#6b7280',
-            cursor: 'pointer',
-            borderRadius: '8px'
-          }}
+          className="p-2 bg-transparent border-none text-gray-500 cursor-pointer rounded-lg hover:bg-gray-100"
           title={t('auth.logout')}
         >
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <svg className="w-4 h-4 lg:w-5 lg:h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
             <polyline points="16,17 21,12 16,7"/>
             <line x1="21" y1="12" x2="9" y2="12"/>

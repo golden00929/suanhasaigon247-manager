@@ -1,0 +1,23 @@
+{
+  "name": "suanha-manager-backups",
+  "version": "1.0.0",
+  "description": "Automated backup system for Suanha Manager",
+  "main": "create_automated_backup.js",
+  "scripts": {
+    "backup": "node create_automated_backup.js",
+    "backup-users": "cd 20250921 && node backup_users.js",
+    "test-backup": "node create_automated_backup.js",
+    "install-deps": "npm install axios"
+  },
+  "dependencies": {
+    "axios": "^1.6.0"
+  },
+  "keywords": [
+    "backup",
+    "automation",
+    "suanha-manager",
+    "database"
+  ],
+  "author": "Suanha Manager Team",
+  "license": "MIT"
+}
