@@ -7,15 +7,15 @@ async function main() {
   // Create admin user
   const adminPassword = await bcrypt.hash('admin123', 12);
   const adminUser = await prisma.user.upsert({
-    where: { email: 'admin@suanha.com' },
+    where: { email: 'system.admin@suanhasaigon247.com' },
     update: {},
     create: {
-      email: 'admin@suanha.com',
+      email: 'system.admin@suanhasaigon247.com',
       password: adminPassword,
       name: 'admin',
       role: 'ADMIN',
       isActive: true,
-      fullName: '관리자',
+      fullName: '시스템 관리자',
       phone: '010-1234-5678',
       position: '시스템 관리자',
       department: 'IT팀',
@@ -25,17 +25,17 @@ async function main() {
   });
 
   // Create employee user
-  const employeePassword = await bcrypt.hash('employee123', 12);
+  const employeePassword = await bcrypt.hash('emp123', 12);
   const employeeUser = await prisma.user.upsert({
-    where: { email: 'employee@suanha.com' },
+    where: { email: 'demo.employee@suanhasaigon247.com' },
     update: {},
     create: {
-      email: 'employee@suanha.com',
+      email: 'demo.employee@suanhasaigon247.com',
       password: employeePassword,
       name: 'employee1',
       role: 'EMPLOYEE',
       isActive: true,
-      fullName: 'Nhân viên 1',
+      fullName: '데모 직원',
       phone: '010-9876-5432',
       position: '직원',
       department: '영업팀',

@@ -23,8 +23,8 @@ npm run dev
 
 ### **접속 정보**
 - **URL**: http://localhost:3000
-- **관리자**: `admin` / `admin123`
-- **직원**: `employee1` / `emp123`
+- **관리자**: `admin` / `admin123` (이메일: system.admin@suanhasaigon247.com)
+- **직원**: `employee1` / `emp123` (이메일: demo.employee@suanhasaigon247.com)
 
 ---
 

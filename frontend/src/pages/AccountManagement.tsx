@@ -127,9 +127,9 @@ const AccountManagement: React.FC = () => {
             console.error('상세 에러 정보:', errorMessage);
 
             if (errorMessage.includes('Email already exists')) {
-              setError('❌ 이미 존재하는 이메일입니다. 다른 이메일을 사용해주세요.');
+              setError(`❌ 이메일 '${newEmployeeData.email}'은 이미 사용 중입니다. 다른 이메일을 사용해주세요.`);
             } else if (errorMessage.includes('Username already exists')) {
-              setError('❌ 이미 존재하는 사용자명입니다. 다른 사용자명을 사용해주세요.');
+              setError(`❌ 사용자명 '${newEmployeeData.username}'은 이미 사용 중입니다. 다른 사용자명을 사용해주세요.`);
             } else if (errorMessage.includes('required')) {
               setError('❌ 필수 정보가 누락되었습니다. 모든 필드를 입력해주세요.');
             } else {

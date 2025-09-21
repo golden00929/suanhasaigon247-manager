@@ -201,6 +201,24 @@ npm run lint
 4. CSS 클래스명 오타 확인
 5. 날짜 형식 변환 시 유효성 검사 필수
 
+## 배포 및 오류 해결 히스토리
+
+### 이메일 중복 오류 해결 (2025-01-21)
+- **문제**: 새 직원 추가 시 "Email already exists" 400 에러 발생
+- **원인**: 시드 데이터의 일반적인 이메일 주소로 인한 중복
+- **해결책**:
+  - 시드 데이터 이메일을 고유하게 변경
+    - `admin@suanha.com` → `system.admin@suanhasaigon247.com`
+    - `employee@suanha.com` → `demo.employee@suanhasaigon247.com`
+  - README.md에 새로운 로그인 정보 반영
+- **배포**: Render.com 자동 배포로 적용됨
+
+### 배포 환경
+- **프론트엔드**: Netlify (https://suanhasaigon247-manager.netlify.app)
+- **백엔드**: Render.com (https://suanhasaigon247-manager.onrender.com)
+- **데이터베이스**: PostgreSQL (Render.com 관리형)
+
 ---
-*최종 업데이트: 2025-01-19*
+*최종 업데이트: 2025-01-21*
 *주요 기능: 직원 관리, 견적 계산, 팝업 시스템*
+*최근 해결: 이메일 중복 오류 수정*
