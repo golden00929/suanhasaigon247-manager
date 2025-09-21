@@ -696,7 +696,7 @@ const AccountManagement: React.FC = () => {
 
       const response = await userAPI.getUsers();
       if (response.success && response.data) {
-        setUsers(response.data.data || []);
+        setUsers(response.data.items || []);
       } else {
         setError('사용자 목록을 불러오는 데 실패했습니다.');
       }
