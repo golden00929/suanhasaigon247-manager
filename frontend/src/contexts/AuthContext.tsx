@@ -35,7 +35,15 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
       if (token && savedUser) {
         try {
-          const response = await authAPI.getCurrentUser();
+          // Set a timeout for API call
+          const timeoutPromise = new Promise((_, reject) =>
+            setTimeout(() => reject(new Error('API timeout')), 5000)
+          );
+
+          const apiPromise = authAPI.getCurrentUser();
+
+          const response = await Promise.race([apiPromise, timeoutPromise]) as any;
+
           if (response.success && response.data) {
             setUser(response.data);
           } else {
@@ -57,9 +65,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const login = async (credentials: LoginRequest) => {
     try {
-      console.log('🔍 AuthContext login called with:', credentials);
       const response = await authAPI.login(credentials);
-      console.log('✅ Login API response:', response);
       if (response.success && response.data) {
         const { user: userData, token } = response.data;
         setUser(userData);

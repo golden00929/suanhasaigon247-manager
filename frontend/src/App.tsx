@@ -110,7 +110,7 @@ const AppRoutes: React.FC = () => {
           </ProtectedRoute>
         }
       />
-      <Route path="/" element={<Navigate to={getDefaultRoute()} replace />} />
+      <Route path="/" element={<Navigate to={isAuthenticated ? getDefaultRoute() : "/login"} replace />} />
     </Routes>
   );
 };
