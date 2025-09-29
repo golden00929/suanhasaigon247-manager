@@ -18,6 +18,13 @@ api.interceptors.request.use(
       config.headers.Authorization = `Bearer ${token}`;
     }
 
+    // Debug logging for login requests
+    if (config.url === '/auth/login') {
+      console.log('🔧 REQUEST INTERCEPTOR - Full config:', config);
+      console.log('🔧 REQUEST INTERCEPTOR - Request data:', config.data);
+      console.log('🔧 REQUEST INTERCEPTOR - Data type:', typeof config.data);
+      console.log('🔧 REQUEST INTERCEPTOR - Data stringified:', JSON.stringify(config.data));
+    }
 
     return config;
   },
@@ -42,6 +49,9 @@ api.interceptors.response.use(
 // Auth API
 export const authAPI = {
   login: async (credentials: LoginRequest): Promise<ApiResponse<LoginResponse>> => {
+    console.log('🚀 API login called with:', credentials);
+    console.log('🚀 Sending POST to:', '/auth/login');
+    console.log('🚀 Request data:', JSON.stringify(credentials));
     const response: AxiosResponse<ApiResponse<LoginResponse>> = await api.post('/auth/login', credentials);
     return response.data;
   },

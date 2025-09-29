@@ -4,6 +4,7 @@ import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { LanguageProvider } from './contexts/LanguageContext';
 import { ActivityLogProvider } from './contexts/ActivityLogContext';
 import ProtectedRoute from './components/ProtectedRoute';
+import Sidebar from './components/Sidebar';
 import Header from './components/Header';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
@@ -15,11 +16,14 @@ import ActivityLog from './pages/ActivityLog';
 
 const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
-    <div className="flex flex-col h-screen bg-gray-50">
-      <Header onMenuClick={() => {}} />
-      <main className="flex-1 overflow-x-hidden overflow-y-auto">
-        {children}
-      </main>
+    <div style={{display: 'flex', height: '100vh', backgroundColor: '#f9fafb'}}>
+      <Sidebar />
+      <div style={{flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden'}}>
+        <Header />
+        <main style={{flex: 1, overflowX: 'hidden', overflowY: 'auto'}}>
+          {children}
+        </main>
+      </div>
     </div>
   );
 };
@@ -110,7 +114,7 @@ const AppRoutes: React.FC = () => {
           </ProtectedRoute>
         }
       />
-      <Route path="/" element={<Navigate to={isAuthenticated ? getDefaultRoute() : "/login"} replace />} />
+      <Route path="/" element={<Navigate to={getDefaultRoute()} replace />} />
     </Routes>
   );
 };
