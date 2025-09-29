@@ -762,10 +762,10 @@ const AccountManagement: React.FC = () => {
   }
 
   return (
-    <div className="p-4 md:p-6">
-      <div className="mb-4 md:mb-6">
-        <h1 className="text-xl md:text-2xl font-bold text-gray-900 mb-2">계정 관리</h1>
-        <p className="text-sm md:text-base text-gray-600">직원 계정을 관리하고 권한을 설정합니다.</p>
+    <div className="p-6">
+      <div className="mb-6">
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">계정 관리</h1>
+        <p className="text-gray-600">직원 계정을 관리하고 권한을 설정합니다.</p>
       </div>
 
       {error && (
@@ -812,67 +812,60 @@ const AccountManagement: React.FC = () => {
         <span>관리자: {filteredUsers.filter(u => u.role === 'ADMIN').length}</span>
       </div>
 
-      {/* Responsive Table View */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
-        {filteredUsers.length === 0 ? (
-          <div className="p-8 text-center">
-            <div className="text-gray-500 text-lg mb-2">👥</div>
-            <p className="text-gray-600 mb-2">표시할 사용자가 없습니다</p>
-            <p className="text-sm text-gray-500">검색 조건을 변경하거나 새 직원을 추가해보세요</p>
-          </div>
-        ) : (
         <div className="overflow-x-auto">
-          <table className="min-w-full">
+          <table className="min-w-full table-fixed">
             <thead className="bg-gray-50">
               <tr>
-                <th className="px-2 md:px-4 py-2 md:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">사용자</th>
-                <th className="hidden sm:table-cell px-2 md:px-4 py-2 md:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">연락처</th>
-                <th className="hidden md:table-cell px-2 md:px-4 py-2 md:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">부서/직급</th>
-                <th className="px-2 md:px-4 py-2 md:py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">상태</th>
-                <th className="hidden lg:table-cell px-2 md:px-4 py-2 md:py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">생성일</th>
-                <th className="px-2 md:px-4 py-2 md:py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">작업</th>
+                <th className="w-16 px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">사진</th>
+                <th className="w-32 px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">이름</th>
+                <th className="w-32 px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">사용자명</th>
+                <th className="w-48 px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">이메일</th>
+                <th className="w-32 px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">전화번호</th>
+                <th className="w-40 px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">부서/직급</th>
+                <th className="w-32 px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">상태/권한</th>
+                <th className="w-32 px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">생성일</th>
+                <th className="w-40 px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">작업</th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
               {filteredUsers.map((user) => (
                 <tr key={user.id} className="hover:bg-gray-50">
-                  {/* User Column - Always visible */}
-                  <td className="px-2 md:px-4 py-3 md:py-4">
-                    <div className="flex items-center gap-3">
+                  <td className="px-6 py-4 whitespace-nowrap text-center">
+                    <div className="flex justify-center">
                       {user.profileImage ? (
                         <img
                           src={user.profileImage}
                           alt={user.fullName}
-                          className="w-8 h-8 md:w-10 md:h-10 rounded-full object-cover flex-shrink-0"
+                          className="w-10 h-10 rounded-full object-cover"
                         />
                       ) : (
-                        <div className="w-8 h-8 md:w-10 md:h-10 bg-gray-300 rounded-full flex items-center justify-center text-gray-600 font-medium text-xs md:text-sm flex-shrink-0">
+                        <div className="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center text-gray-600 font-medium">
                           {user.fullName ? user.fullName.charAt(0) : user.username.charAt(0)}
                         </div>
                       )}
-                      <div className="min-w-0 flex-1">
-                        <div className="text-sm font-medium text-gray-900 truncate">{user.fullName}</div>
-                        <div className="text-xs text-gray-500 truncate">{user.username}</div>
-                        <div className="sm:hidden text-xs text-gray-500 truncate">{user.email}</div>
-                      </div>
                     </div>
                   </td>
-
-                  {/* Contact Column - Hidden on mobile */}
-                  <td className="hidden sm:table-cell px-2 md:px-4 py-3 md:py-4">
+                  <td className="px-6 py-4 whitespace-nowrap text-center">
+                    <div className="text-sm font-medium text-gray-900">{user.fullName}</div>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-center">
+                    <div className="text-sm text-gray-900">{user.username}</div>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-center">
                     <div className="text-sm text-gray-900">{user.email}</div>
-                    {user.phone && <div className="text-xs text-gray-500">{user.phone}</div>}
                   </td>
-
-                  {/* Department Column - Hidden on mobile/small tablets */}
-                  <td className="hidden md:table-cell px-2 md:px-4 py-3 md:py-4">
-                    <div className="text-sm font-medium text-gray-900">{user.department}</div>
-                    <div className="text-xs text-gray-500">{user.position}</div>
+                  <td className="px-6 py-4 whitespace-nowrap text-center">
+                    <div className="text-sm text-gray-900">{user.phone}</div>
                   </td>
-
-                  {/* Status Column - Always visible */}
-                  <td className="px-2 md:px-4 py-3 md:py-4 text-center">
-                    <div className="flex flex-col gap-1">
+                  <td className="px-6 py-4 whitespace-nowrap text-center">
+                    <div className="flex flex-col items-center justify-center space-y-1.5">
+                      <div className="text-sm font-medium text-gray-900">{user.department}</div>
+                      <div className="text-sm text-gray-500">{user.position}</div>
+                    </div>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-center">
+                    <div className="flex flex-col items-center justify-center space-y-1.5">
                       <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
                         user.isActive
                           ? 'bg-green-100 text-green-800'
@@ -889,35 +882,31 @@ const AccountManagement: React.FC = () => {
                       </span>
                     </div>
                   </td>
-
-                  {/* Created Date - Hidden on mobile/tablets */}
-                  <td className="hidden lg:table-cell px-2 md:px-4 py-3 md:py-4 text-center">
+                  <td className="px-6 py-4 whitespace-nowrap text-center">
                     <div className="text-sm text-gray-900">{formatDate(user.createdAt)}</div>
                   </td>
-
-                  {/* Actions Column - Always visible */}
-                  <td className="px-2 md:px-4 py-3 md:py-4 text-center">
-                    <div className="flex flex-col gap-1 lg:gap-2">
+                  <td className="px-6 py-4 whitespace-nowrap text-center">
+                    <div className="flex flex-col items-center space-y-2.5">
                       <button
                         onClick={() => handleViewDetails(user)}
-                        className="bg-blue-500 hover:bg-blue-600 text-white px-2 md:px-3 py-1 rounded text-xs font-medium transition-colors"
+                        className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-1.5 rounded-md text-xs font-medium transition-all duration-200 min-w-[60px] shadow-sm hover:shadow-md"
                       >
-                        상세
+                        상세보기
                       </button>
-                      <div className="flex gap-1">
+                      <div className="flex space-x-2">
                         <button
                           onClick={() => handleToggleStatus(user.id)}
                           className={`${
                             user.isActive
-                              ? 'bg-orange-500 hover:bg-orange-600'
-                              : 'bg-green-500 hover:bg-green-600'
-                          } text-white px-2 py-1 rounded text-xs font-medium transition-colors`}
+                              ? 'bg-orange-500 hover:bg-orange-600 text-white'
+                              : 'bg-green-500 hover:bg-green-600 text-white'
+                          } px-3 py-1.5 rounded-md text-xs font-medium transition-all duration-200 min-w-[50px] shadow-sm hover:shadow-md`}
                         >
                           {user.isActive ? '비활성' : '활성화'}
                         </button>
                         <button
-                          onClick={() => handleDeleteUser(user.id)}
-                          className="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded text-xs font-medium transition-colors"
+                          onClick={() => handleDelete(user.id)}
+                          className="bg-red-500 hover:bg-red-600 text-white px-3 py-1.5 rounded-md text-xs font-medium transition-all duration-200 min-w-[50px] shadow-sm hover:shadow-md"
                         >
                           삭제
                         </button>
@@ -929,8 +918,13 @@ const AccountManagement: React.FC = () => {
             </tbody>
           </table>
         </div>
-        )}
       </div>
+
+      {filteredUsers.length === 0 && (
+        <div className="text-center py-8 text-gray-500">
+          검색 조건에 맞는 사용자가 없습니다.
+        </div>
+      )}
     </div>
   );
 };
