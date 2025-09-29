@@ -170,7 +170,7 @@ const PriceCalculator: React.FC = () => {
           unitPrice: item.unitPrice,
           unit: item.unit || '개',
           description: item.description || '',
-          baseCost: Math.round(item.unitPrice * 0.7) // 역산으로 원가 추정 (판매가의 70%)
+          baseCost: item.baseCost || 0 // 실제 저장된 원가 사용
         }));
 
         setItems(transformedItems);
@@ -214,7 +214,7 @@ const PriceCalculator: React.FC = () => {
 
     try {
       console.log('📝 새 가격 항목 추가 시작...');
-      const calculatedPrice = calculateSellingPrice(formData.baseCost);
+      const calculatedPrice = calculateNetPrice(formData.baseCost); // 부가세 제외 순단가 사용
 
       // 실제 API로 가격 항목 생성
       const createResponse = await priceAPI.createItem({
@@ -222,6 +222,7 @@ const PriceCalculator: React.FC = () => {
         itemName: formData.name.trim(),
         unit: formData.unit.trim(),
         unitPrice: calculatedPrice,
+        baseCost: formData.baseCost,
         description: formData.description.trim(),
         isActive: true
       });
@@ -319,11 +320,12 @@ const PriceCalculator: React.FC = () => {
 
     try {
       console.log('💰 가격 항목 업데이트 시작...');
-      const calculatedPrice = calculateSellingPrice(priceFormData.baseCost, priceCalculationRates);
+      const calculatedPrice = calculateNetPrice(priceFormData.baseCost, priceCalculationRates); // 부가세 제외 순단가 사용
 
       // 실제 API로 가격 항목 업데이트
       const updateResponse = await priceAPI.updateItem(showPriceModal.item.id, {
-        unitPrice: calculatedPrice
+        unitPrice: calculatedPrice,
+        baseCost: priceFormData.baseCost
       });
 
       if (updateResponse.success && updateResponse.data) {
@@ -499,7 +501,7 @@ const PriceCalculator: React.FC = () => {
       <div className="flex justify-between items-center mb-6">
         <div>
           <h1 className="text-2xl font-bold text-gray-800">단가 관리 시스템</h1>
-          <p className="text-sm text-gray-600 mt-1">원가를 입력하면 자동으로 판매 단가가 계산됩니다 (PIT 10% + 기업이윤 30% + 부가세 8%)</p>
+          <p className="text-sm text-gray-600 mt-1">원가를 입력하면 견적서용 순단가가 계산됩니다 (PIT 10% + 기업이윤 30%, 부가세 제외)</p>
         </div>
         <div className="flex space-x-3">
           <button

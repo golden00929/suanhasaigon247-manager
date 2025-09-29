@@ -143,6 +143,7 @@ model PriceItem {
   itemName    String
   unit        String
   unitPrice   Float
+  baseCost    Float   @default(0)
   laborHours  Float   @default(0)
   isActive    Boolean @default(true)
   createdAt   DateTime @default(now())

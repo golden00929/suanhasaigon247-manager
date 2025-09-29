@@ -329,7 +329,7 @@ router.get('/items', authenticateToken, async (req: AuthenticatedRequest, res: R
 // Create price item
 router.post('/items', authenticateToken, requireAdmin, async (req: AuthenticatedRequest, res: Response) => {
   try {
-    const { categoryId, itemName, unit, unitPrice, laborHours = 0 } = req.body;
+    const { categoryId, itemName, unit, unitPrice, baseCost = 0, laborHours = 0 } = req.body;
 
     if (!categoryId || !itemName || !unit || !unitPrice) {
       return res.status(400).json({
@@ -344,6 +344,7 @@ router.post('/items', authenticateToken, requireAdmin, async (req: Authenticated
         itemName,
         unit,
         unitPrice,
+        baseCost,
         laborHours
       },
       include: {
@@ -376,7 +377,7 @@ router.post('/items', authenticateToken, requireAdmin, async (req: Authenticated
 router.put('/items/:id', authenticateToken, requireAdmin, async (req: AuthenticatedRequest, res: Response) => {
   try {
     const { id } = req.params;
-    const { itemName, unit, unitPrice, laborHours, isActive } = req.body;
+    const { itemName, unit, unitPrice, baseCost, laborHours, isActive } = req.body;
 
     const item = await prisma.priceItem.update({
       where: { id },
@@ -384,6 +385,7 @@ router.put('/items/:id', authenticateToken, requireAdmin, async (req: Authentica
         itemName,
         unit,
         unitPrice,
+        baseCost,
         laborHours,
         isActive
       },
