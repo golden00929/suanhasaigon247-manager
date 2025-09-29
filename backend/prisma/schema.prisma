@@ -107,7 +107,7 @@ model Quotation {
 model QuotationItem {
   id           String  @id @default(cuid())
   quotationId  String
-  categoryId   String
+  categoryId   String?
   itemName     String
   quantity     Float
   unitPrice    Float
@@ -116,7 +116,7 @@ model QuotationItem {
 
   // Relations
   quotation Quotation @relation(fields: [quotationId], references: [id], onDelete: Cascade)
-  category  PriceCategory @relation(fields: [categoryId], references: [id])
+  category  PriceCategory? @relation(fields: [categoryId], references: [id])
 
   @@map("quotation_items")
 }

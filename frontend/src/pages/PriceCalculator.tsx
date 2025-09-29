@@ -163,15 +163,25 @@ const PriceCalculator: React.FC = () => {
         console.log('✅ 가격 항목 로드 성공:', itemsData.length, '개');
 
         // 데이터베이스 구조에 맞게 변환
-        const transformedItems = itemsData.map((item: any) => ({
-          id: item.id,
-          categoryId: item.categoryId,
-          name: item.itemName,
-          unitPrice: item.unitPrice,
-          unit: item.unit || '개',
-          description: item.description || '',
-          baseCost: item.baseCost || 0 // 실제 저장된 원가 사용
-        }));
+        const transformedItems = itemsData.map((item: any) => {
+          let baseCost = item.baseCost || 0;
+          // 기존 데이터에 baseCost가 없으면 역산으로 추정
+          if (baseCost === 0 && item.unitPrice > 0) {
+            // 현재 단가가 부가세 포함 가격이라고 가정하고 역산
+            // unitPrice = baseCost * 1.1 * 1.3 * 1.08 (PIT 10% + 기업이윤 30% + VAT 8%)
+            baseCost = Math.round(item.unitPrice / (1.1 * 1.3 * 1.08));
+          }
+
+          return {
+            id: item.id,
+            categoryId: item.categoryId,
+            name: item.itemName,
+            unitPrice: item.unitPrice,
+            unit: item.unit || '개',
+            description: item.description || '',
+            baseCost: baseCost
+          };
+        });
 
         setItems(transformedItems);
       } else {
@@ -305,8 +315,17 @@ const PriceCalculator: React.FC = () => {
   };
 
   const handlePriceUpdate = (item: PriceItem) => {
-    const baseCost = item.baseCost || 0;
-    setPriceFormData({ baseCost, calculatedPrice: item.unitPrice });
+    // 저장된 baseCost가 있으면 사용하고, 없으면 역산으로 추정
+    let baseCost = item.baseCost || 0;
+    if (baseCost === 0 && item.unitPrice > 0) {
+      // 현재 단가가 부가세 포함 가격이라고 가정하고 역산
+      // unitPrice = baseCost * 1.1 * 1.3 * 1.08 (PIT 10% + 기업이윤 30% + VAT 8%)
+      baseCost = Math.round(item.unitPrice / (1.1 * 1.3 * 1.08));
+    }
+
+    // 견적서에서 사용할 부가세 제외 순단가로 설정
+    const netPrice = calculateNetPrice(baseCost, { pitRate: 10, profitRate: 30, vatRate: 8 });
+    setPriceFormData({ baseCost, calculatedPrice: netPrice });
     setFormattedPriceBaseCost(baseCost > 0 ? formatNumber(baseCost) : '');
     // 기본 요율로 초기화
     setPriceCalculationRates({ pitRate: 10, profitRate: 30, vatRate: 8 });

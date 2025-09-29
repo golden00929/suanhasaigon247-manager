@@ -265,7 +265,7 @@ router.post('/', authenticateToken, requireEmployee, async (req: AuthenticatedRe
               }
 
               return {
-                categoryId: categoryId,
+                categoryId: item.priceItemId && item.priceItemId !== 'custom' ? item.priceItemId : categoryId,
                 itemName: item.itemName,
                 quantity: item.quantity,
                 unitPrice: item.unitPrice,
@@ -378,7 +378,7 @@ router.put('/:id', authenticateToken, requireEmployee, async (req: Authenticated
       await prisma.quotationItem.createMany({
         data: items.map(item => ({
           quotationId: id,
-          categoryId: item.categoryId || null, // Allow null for custom items
+          categoryId: item.priceItemId && item.priceItemId !== 'custom' ? item.priceItemId : null, // priceItemId 사용, custom이면 null
           itemName: item.itemName,
           quantity: item.quantity,
           unitPrice: item.unitPrice,
