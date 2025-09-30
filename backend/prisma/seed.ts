@@ -44,52 +44,9 @@ async function main() {
     }
   });
 
-  // Create sample customers
-  const customer1 = await prisma.customer.upsert({
-    where: { id: 'customer-1' },
-    update: {},
-    create: {
-      id: 'customer-1',
-      customerName: '김철수',
-      companyName: '김철수',
-      phone: '010-1234-5678',
-      email: 'kim@example.com',
-      memo: '정기 고객, VIP 등급'
-    }
-  });
-
-  const customer2 = await prisma.customer.upsert({
-    where: { id: 'customer-2' },
-    update: {},
-    create: {
-      id: 'customer-2',
-      customerName: '이영희',
-      companyName: '이영희 상사',
-      phone: '010-9876-5432',
-      email: 'lee@example.com',
-      memo: '신축 아파트, 정리정돈 깔끔함'
-    }
-  });
-
-  const customer3 = await prisma.customer.upsert({
-    where: { id: 'customer-3' },
-    update: {},
-    create: {
-      id: 'customer-3',
-      customerName: '박민수',
-      companyName: '박민수 전기상사',
-      phone: '010-5555-1234',
-      email: 'park@example.com',
-      memo: '상업용 건물, 24시간 운영'
-    }
-  });
-
   console.log('Seed data created:');
   console.log('Admin user:', adminUser);
   console.log('Employee user:', employeeUser);
-  console.log('Customer 1:', customer1);
-  console.log('Customer 2:', customer2);
-  console.log('Customer 3:', customer3);
 }
 
 main()

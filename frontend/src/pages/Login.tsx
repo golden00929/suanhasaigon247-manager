@@ -146,24 +146,6 @@ const Login: React.FC = () => {
             </form>
           </div>
 
-          {/* Demo credentials */}
-          <div className="bg-gray-50 px-8 py-4 border-t border-gray-200">
-            <div className="text-center">
-              <p className="text-xs font-semibold text-gray-600 mb-2">
-                Demo Accounts
-              </p>
-              <div className="space-y-1">
-                <div className="bg-white rounded-md px-3 py-2 text-xs">
-                  <span className="font-semibold text-primary-600">Admin:</span>
-                  <span className="text-gray-600 ml-1">system.admin@suanhasaigon247.com / admin123</span>
-                </div>
-                <div className="bg-white rounded-md px-3 py-2 text-xs">
-                  <span className="font-semibold text-green-600">Employee:</span>
-                  <span className="text-gray-600 ml-1">demo.employee@suanhasaigon247.com / emp123</span>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
 
         {/* Footer */}
