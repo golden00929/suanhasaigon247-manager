@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider      = "prisma-client-js"
   binaryTargets = ["native", "debian-openssl-3.0.x"]
@@ -12,145 +9,129 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  password  String
-  name      String   // username
-  role      Role     @default(EMPLOYEE)
-  isActive  Boolean  @default(true)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  // Additional employee information
-  fullName     String?
-  phone        String?
-  position     String?
-  department   String?
-  birthDate    DateTime?
-  hireDate     DateTime?
-  address      String?
-  profileImage String?
-  notes        String?
-
-  // Relations
-  quotations Quotation[]
+  id              String          @id @default(cuid())
+  email           String          @unique
+  password        String
+  name            String
+  role            Role            @default(EMPLOYEE)
+  isActive        Boolean         @default(true)
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+  fullName        String?
+  phone           String?
+  position        String?
+  department      String?
+  birthDate       DateTime?
+  hireDate        DateTime?
+  address         String?
+  profileImage    String?
+  notes           String?
   priceCategories PriceCategory[]
+  quotations      Quotation[]
 
   @@map("users")
 }
 
 model Customer {
-  id              String   @id @default(cuid())
+  id              String            @id @default(cuid())
   customerName    String
   companyName     String
   phone           String
   email           String?
   memo            String?
   lastContactDate DateTime?
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-
-  // Relations
-  addresses   CustomerAddress[]
-  quotations  Quotation[]
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  addresses       CustomerAddress[]
+  quotations      Quotation[]
 
   @@map("customers")
 }
 
 model CustomerAddress {
-  id         String   @id @default(cuid())
+  id         String      @id @default(cuid())
   customerId String
-  name       String   // 현장명 (예: "본사", "1공장")
+  name       String
   address    String
-  isMain     Boolean  @default(false)
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-
-  // Relations
-  customer   Customer   @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  isMain     Boolean     @default(false)
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+  customer   Customer    @relation(fields: [customerId], references: [id], onDelete: Cascade)
   quotations Quotation[]
 
   @@map("customer_addresses")
 }
 
 model Quotation {
-  id                String        @id @default(cuid())
-  quotationNumber   String        @unique
+  id                String           @id @default(cuid())
+  quotationNumber   String           @unique
   customerId        String
-  customerAddressId String
-  status            QuotationStatus @default(DRAFT)
-  description       String?       // 견적 관리/설명
-  notes             String?       // 메모
-  materialCost      Float         @default(0)
-  laborCost         Float         @default(0)
-  travelCost       Float         @default(0)
-  marginRate        Float         @default(15)
-  subtotal          Float         @default(0)
-  tax               Float         @default(0)
-  taxRate           Float         @default(10)
-  total             Float         @default(0)
+  customerAddressId String?
+  status            QuotationStatus  @default(DRAFT)
+  materialCost      Float            @default(0)
+  laborCost         Float            @default(0)
+  travelCost        Float            @default(0)
+  marginRate        Float            @default(0)
+  subtotal          Float            @default(0)
+  tax               Float            @default(0)
+  total             Float            @default(0)
   createdBy         String
   sentAt            DateTime?
   validUntil        DateTime?
-  createdAt         DateTime      @default(now())
-  updatedAt         DateTime      @updatedAt
-
-  // Relations
-  customer        Customer         @relation(fields: [customerId], references: [id])
-  customerAddress CustomerAddress  @relation(fields: [customerAddressId], references: [id])
-  creator         User             @relation(fields: [createdBy], references: [id])
-  items           QuotationItem[]
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+  description       String?
+  notes             String?
+  taxRate           Float            @default(8)
+  items             QuotationItem[]
+  creator           User             @relation(fields: [createdBy], references: [id])
+  customerAddress   CustomerAddress? @relation(fields: [customerAddressId], references: [id])
+  customer          Customer         @relation(fields: [customerId], references: [id])
 
   @@map("quotations")
 }
 
 model QuotationItem {
-  id           String  @id @default(cuid())
-  quotationId  String
-  categoryId   String?
-  itemName     String
-  quantity     Float
-  unitPrice    Float
-  amount       Float
-  laborHours   Float   @default(0)
-
-  // Relations
-  quotation Quotation @relation(fields: [quotationId], references: [id], onDelete: Cascade)
-  category  PriceCategory? @relation(fields: [categoryId], references: [id])
+  id          String         @id @default(cuid())
+  quotationId String
+  categoryId  String?
+  itemName    String
+  quantity    Float
+  unitPrice   Float
+  amount      Float
+  laborHours  Float          @default(0)
+  category    PriceCategory? @relation(fields: [categoryId], references: [id])
+  quotation   Quotation      @relation(fields: [quotationId], references: [id], onDelete: Cascade)
 
   @@map("quotation_items")
 }
 
 model PriceCategory {
-  id        String   @id @default(cuid())
-  name      String
-  isActive  Boolean  @default(true)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  createdBy String
-
-  // Relations
-  creator User            @relation(fields: [createdBy], references: [id])
-  items   PriceItem[]
+  id             String          @id @default(cuid())
+  name           String
+  isActive       Boolean         @default(true)
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  createdBy      String
+  creator        User            @relation(fields: [createdBy], references: [id])
+  items          PriceItem[]
   quotationItems QuotationItem[]
 
   @@map("price_categories")
 }
 
 model PriceItem {
-  id          String  @id @default(cuid())
-  categoryId  String
-  itemName    String
-  unit        String
-  unitPrice   Float
-  baseCost    Float   @default(0)
-  laborHours  Float   @default(0)
-  isActive    Boolean @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  // Relations
-  category PriceCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  id         String        @id @default(cuid())
+  categoryId String
+  itemName   String
+  unit       String
+  unitPrice  Float
+  laborHours Float         @default(0)
+  isActive   Boolean       @default(true)
+  createdAt  DateTime      @default(now())
+  updatedAt  DateTime      @updatedAt
+  baseCost   Float         @default(0)
+  category   PriceCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
 
   @@map("price_items")
 }

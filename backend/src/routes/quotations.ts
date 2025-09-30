@@ -194,16 +194,14 @@ router.post('/', authenticateToken, requireEmployee, async (req: AuthenticatedRe
         });
       }
 
-      if (customerWithAddresses.addresses.length === 0) {
-        return res.status(400).json({
-          success: false,
-          message: 'Customer must have at least one address to create a quotation'
-        });
+      // Use the first address if available, otherwise null
+      if (customerWithAddresses.addresses.length > 0) {
+        customerAddressId = customerWithAddresses.addresses[0].id;
+        console.log('🏠 Using default customer address:', customerAddressId);
+      } else {
+        customerAddressId = null;
+        console.log('⚠️ No address found for customer, proceeding without address');
       }
-
-      // Use the first address as default
-      customerAddressId = customerWithAddresses.addresses[0].id;
-      console.log('🏠 Using default customer address:', customerAddressId);
     }
 
     // Generate quotation number
