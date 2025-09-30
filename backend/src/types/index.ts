@@ -36,9 +36,12 @@ export interface CustomerUpdateRequest extends Partial<CustomerCreateRequest> {
 
 export interface QuotationCreateRequest {
   customerId: string;
-  customerAddressId: string;
+  customerAddressId?: string;
+  title?: string;
+  description?: string;
   items: {
-    categoryId: string;
+    categoryId?: string;
+    priceItemId?: string;
     itemName: string;
     quantity: number;
     unitPrice: number;
@@ -47,12 +50,14 @@ export interface QuotationCreateRequest {
   laborCost?: number;
   travelCost?: number;
   marginRate?: number;
-  validUntil?: Date;
+  taxRate?: number;
+  validUntil?: Date | string;
+  notes?: string;
+  status?: 'DRAFT' | 'REVIEWED' | 'SENT' | 'CONTRACTED' | 'CANCELLED';
 }
 
 export interface QuotationUpdateRequest extends Partial<QuotationCreateRequest> {
-  id: string;
-  status?: 'DRAFT' | 'REVIEWED' | 'SENT' | 'CONTRACTED' | 'CANCELLED';
+  id?: string;
 }
 
 export interface PriceCategoryCreateRequest {

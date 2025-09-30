@@ -271,18 +271,19 @@ const QuotationManagement: React.FC = () => {
 
       const quotationData = {
         customerId: customerId,
-        customerAddressId: formData.customerAddressId,
+        customerAddressId: formData.customerAddressId || null,
         title: formData.title,
         description: formData.description,
         items: formData.items.map(item => ({
-          priceItemId: item.priceItemId || null,
+          categoryId: item.priceItemId || null,
           itemName: item.itemName,
           quantity: item.quantity,
           unitPrice: item.unitPrice
         })),
-        subtotal: formData.subtotal,
-        tax: formData.tax,
-        totalAmount: formData.totalAmount,
+        materialCost: 0,
+        laborCost: 0,
+        travelCost: 0,
+        marginRate: 0,
         taxRate: formData.taxRate,
         status: formData.status,
         validUntil: formData.validUntil ? new Date(formData.validUntil).toISOString() : null,
