@@ -288,11 +288,14 @@ router.post('/', authenticateToken, requireEmployee, async (req: AuthenticatedRe
     };
 
     res.status(201).json(response);
-  } catch (error) {
-    console.error('Create quotation error:', error);
+  } catch (error: any) {
+    console.error('❌ Create quotation error:', error);
+    console.error('❌ Error stack:', error.stack);
+    console.error('❌ Error message:', error.message);
     res.status(500).json({
       success: false,
-      message: 'Internal server error'
+      message: error.message || 'Internal server error',
+      error: process.env.NODE_ENV === 'development' ? error.stack : undefined
     });
   }
 });

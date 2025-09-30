@@ -272,7 +272,6 @@ const QuotationManagement: React.FC = () => {
       const quotationData = {
         customerId: customerId,
         customerAddressId: formData.customerAddressId || null,
-        title: formData.title,
         description: formData.description,
         items: formData.items.map(item => ({
           categoryId: item.priceItemId || null,
@@ -290,11 +289,15 @@ const QuotationManagement: React.FC = () => {
         notes: formData.notes
       };
 
+      console.log('📤 Sending quotation data:', JSON.stringify(quotationData, null, 2));
+
       if (editingQuotation) {
-        await quotationAPI.updateQuotation(editingQuotation.id.toString(), quotationData);
+        const response = await quotationAPI.updateQuotation(editingQuotation.id.toString(), quotationData);
+        console.log('✅ Update response:', response);
         setSuccess('✅ 견적서가 성공적으로 수정되었습니다.');
       } else {
-        await quotationAPI.createQuotation(quotationData);
+        const response = await quotationAPI.createQuotation(quotationData);
+        console.log('✅ Create response:', response);
         setSuccess('✅ 견적서가 성공적으로 생성되었습니다.');
       }
 
@@ -307,8 +310,11 @@ const QuotationManagement: React.FC = () => {
 
       setTimeout(() => setSuccess(''), 3000);
     } catch (err: any) {
-      setError('❌ ' + (err.response?.data?.message || '견적서 저장 중 오류가 발생했습니다.'));
-      setTimeout(() => setError(''), 3000);
+      console.error('❌ Quotation save error:', err);
+      console.error('❌ Error response:', err.response?.data);
+      const errorMsg = err.response?.data?.message || err.message || '견적서 저장 중 오류가 발생했습니다.';
+      setError('❌ ' + errorMsg);
+      setTimeout(() => setError(''), 5000);
     }
   };
 
