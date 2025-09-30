@@ -244,28 +244,8 @@ router.post('/', authenticateToken, requireEmployee, async (req: AuthenticatedRe
           create: await Promise.all((quotationData.items || [])
             .filter(item => item.itemName) // Only include items with itemName
             .map(async item => {
-              let categoryId = item.categoryId;
-
-              // If no categoryId provided, create or use default category
-              if (!categoryId) {
-                let defaultCategory = await prisma.priceCategory.findFirst({
-                  where: { name: 'General' }
-                });
-
-                if (!defaultCategory) {
-                  defaultCategory = await prisma.priceCategory.create({
-                    data: {
-                      name: 'General',
-                      createdBy: userId
-                    }
-                  });
-                }
-
-                categoryId = defaultCategory.id;
-              }
-
               return {
-                categoryId: item.priceItemId && item.priceItemId !== 'custom' ? item.priceItemId : categoryId,
+                categoryId: item.categoryId || null,
                 itemName: item.itemName,
                 quantity: item.quantity,
                 unitPrice: item.unitPrice,
