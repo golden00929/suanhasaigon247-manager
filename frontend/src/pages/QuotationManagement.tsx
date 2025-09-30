@@ -46,7 +46,7 @@ const QuotationManagement: React.FC = () => {
     customerAddressId: '',
     title: '',
     description: '',
-    items: [{ priceItemId: '', itemName: '', quantity: 1, unitPrice: 0, formattedUnitPrice: '', total: 0 }],
+    items: [{ priceItemId: '', categoryId: '', itemName: '', quantity: 1, unitPrice: 0, formattedUnitPrice: '', total: 0 }],
     subtotal: 0,
     tax: 0,
     totalAmount: 0,
@@ -187,6 +187,7 @@ const QuotationManagement: React.FC = () => {
           newItems[index] = {
             ...newItems[index],
             priceItemId: value,
+            categoryId: selectedPriceItem.categoryId, // PriceCategory ID 저장
             itemName: selectedPriceItem.itemName,
             unitPrice: selectedPriceItem.unitPrice, // 단가계산기의 원래 가격 (부가세 제외)
             formattedUnitPrice: formatNumber(selectedPriceItem.unitPrice)
@@ -218,7 +219,7 @@ const QuotationManagement: React.FC = () => {
   const addItem = () => {
     setFormData({
       ...formData,
-      items: [...formData.items, { priceItemId: '', itemName: '', quantity: 1, unitPrice: 0, formattedUnitPrice: '', total: 0 }]
+      items: [...formData.items, { priceItemId: '', categoryId: '', itemName: '', quantity: 1, unitPrice: 0, formattedUnitPrice: '', total: 0 }]
     });
   };
 
@@ -274,7 +275,7 @@ const QuotationManagement: React.FC = () => {
         customerAddressId: formData.customerAddressId || null,
         description: formData.description,
         items: formData.items.map(item => ({
-          categoryId: item.priceItemId || null,
+          categoryId: item.categoryId || null, // PriceCategory ID 사용
           itemName: item.itemName,
           quantity: item.quantity,
           unitPrice: item.unitPrice
@@ -324,7 +325,7 @@ const QuotationManagement: React.FC = () => {
       customerAddressId: '',
       title: '',
       description: '',
-      items: [{ priceItemId: '', itemName: '', quantity: 1, unitPrice: 0, formattedUnitPrice: '', total: 0 }],
+      items: [{ priceItemId: '', categoryId: '', itemName: '', quantity: 1, unitPrice: 0, formattedUnitPrice: '', total: 0 }],
       subtotal: 0,
       tax: 0,
       totalAmount: 0,
