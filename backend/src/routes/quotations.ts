@@ -207,6 +207,13 @@ router.post('/', authenticateToken, requireEmployee, async (req: AuthenticatedRe
     // Generate quotation number
     const quotationNumber = await generateQuotationNumber();
 
+    console.log('📝 Items received:', quotationData.items.map(item => ({
+      itemName: item.itemName,
+      categoryId: item.categoryId,
+      quantity: item.quantity,
+      unitPrice: item.unitPrice
+    })));
+
     // Calculate totals
     const itemsTotal = quotationData.items.reduce((sum, item) => sum + (item.quantity * item.unitPrice), 0);
     const materialCost = quotationData.materialCost ?? 0;
@@ -242,8 +249,20 @@ router.post('/', authenticateToken, requireEmployee, async (req: AuthenticatedRe
           create: await Promise.all((quotationData.items || [])
             .filter(item => item.itemName) // Only include items with itemName
             .map(async item => {
+              // Validate categoryId if provided
+              let categoryId = item.categoryId || null;
+              if (categoryId) {
+                const categoryExists = await prisma.priceCategory.findUnique({
+                  where: { id: categoryId }
+                });
+                if (!categoryExists) {
+                  console.warn(`⚠️ Category ID ${categoryId} not found, setting to null`);
+                  categoryId = null;
+                }
+              }
+
               return {
-                categoryId: item.categoryId || null,
+                categoryId: categoryId,
                 itemName: item.itemName,
                 quantity: item.quantity,
                 unitPrice: item.unitPrice,
