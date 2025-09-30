@@ -6,7 +6,7 @@
   "main": "dist/app.js",
   "scripts": {
     "build": "prisma generate",
-    "start": "prisma db push && npx tsx src/app.ts",
+    "start": "prisma db push --skip-seed && npx tsx src/app.ts",
     "dev": "npx tsx watch src/app.ts",
     "db:generate": "prisma generate",
     "db:push": "prisma db push",
