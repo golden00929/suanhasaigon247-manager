@@ -211,11 +211,11 @@ router.post('/', authenticateToken, requireEmployee, async (req: AuthenticatedRe
 
     // Calculate totals
     const itemsTotal = quotationData.items.reduce((sum, item) => sum + (item.quantity * item.unitPrice), 0);
-    const materialCost = quotationData.materialCost || 0;
-    const laborCost = quotationData.laborCost || 0;
-    const travelCost = quotationData.travelCost || 0;
-    const marginRate = quotationData.marginRate || 15;
-    const taxRate = quotationData.taxRate || 10;
+    const materialCost = quotationData.materialCost ?? 0;
+    const laborCost = quotationData.laborCost ?? 0;
+    const travelCost = quotationData.travelCost ?? 0;
+    const marginRate = quotationData.marginRate ?? 0;
+    const taxRate = quotationData.taxRate ?? 8;
 
     const subtotal = itemsTotal + materialCost + laborCost + travelCost;
     const marginAmount = subtotal * (marginRate / 100);
@@ -337,11 +337,11 @@ router.put('/:id', authenticateToken, requireEmployee, async (req: Authenticated
       });
 
       const itemsTotal = quotationData.items.reduce((sum, item) => sum + (item.quantity * item.unitPrice), 0);
-      const materialCost = quotationData.materialCost || existingQuotation.materialCost;
-      const laborCost = quotationData.laborCost || existingQuotation.laborCost;
-      const travelCost = quotationData.travelCost || existingQuotation.travelCost;
-      const marginRate = quotationData.marginRate || existingQuotation.marginRate;
-      const taxRate = quotationData.taxRate || existingQuotation.taxRate || 10;
+      const materialCost = quotationData.materialCost ?? existingQuotation.materialCost ?? 0;
+      const laborCost = quotationData.laborCost ?? existingQuotation.laborCost ?? 0;
+      const travelCost = quotationData.travelCost ?? existingQuotation.travelCost ?? 0;
+      const marginRate = quotationData.marginRate ?? existingQuotation.marginRate ?? 0;
+      const taxRate = quotationData.taxRate ?? existingQuotation.taxRate ?? 8;
 
       const subtotal = itemsTotal + materialCost + laborCost + travelCost;
       const marginAmount = subtotal * (marginRate / 100);
