@@ -1,0 +1,151 @@
+FINAL DIRECTORY STRUCTURE
+=========================
+
+backend/                              (Vercel Root Directory)
+│
+├── api/                              ← Vercel serverless functions directory
+│   └── index.ts                      ← ENTRY POINT: Exports Express app
+│                                        Vercel invokes this as serverless function
+│
+├── src/                              ← Application code (renamed from old "api/")
+│   ├── app.ts                        ← Express application setup
+│   │                                    - Middleware configuration
+│   │                                    - Route mounting
+│   │                                    - Error handlers
+│   │                                    - NO app.listen() in production
+│   │
+│   ├── routes/                       ← Express routes
+│   │   ├── auth.ts                   ← /api/auth/*
+│   │   ├── customers.ts              ← /api/customers/*
+│   │   ├── quotations.ts             ← /api/quotations/*
+│   │   ├── prices.ts                 ← /api/prices/*
+│   │   └── users.ts                  ← /api/users/*
+│   │
+│   ├── middleware/                   ← Express middleware
+│   │   └── auth.ts                   ← JWT authentication
+│   │
+│   ├── utils/                        ← Utility functions
+│   │   └── memoryMonitor.ts          ← Memory tracking
+│   │
+│   └── types/                        ← TypeScript types
+│       └── index.ts                  ← Type definitions
+│
+├── prisma/                           ← Database
+│   ├── schema.prisma                 ← Database schema
+│   └── seed.ts                       ← Seed data
+│
+├── vercel.json                       ← Vercel configuration (REQUIRED)
+├── package.json                      ← Dependencies & scripts
+├── tsconfig.json                     ← TypeScript config
+└── .env                              ← Local env vars (not deployed)
+
+
+REQUEST FLOW
+============
+
+1. User → https://your-app.vercel.app/api/customers
+                    ↓
+2. Vercel receives request
+                    ↓
+3. Vercel routes to api/index.ts (via vercel.json)
+                    ↓
+4. api/index.ts imports & exports Express app from ../src/app
+                    ↓
+5. Express app handles request through:
+   - Middleware (cors, helmet, json parser)
+   - Routes (/api/customers → src/routes/customers.ts)
+   - Database (Prisma)
+                    ↓
+6. Response sent back through Vercel
+                    ↓
+7. User receives JSON response
+
+
+FILE CONTENTS
+=============
+
+api/index.ts:
+─────────────
+import app from '../src/app';
+export default app;
+
+
+vercel.json:
+────────────
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "api/index.ts",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "api/index.ts"
+    }
+  ]
+}
+
+
+src/app.ts:
+───────────
+import express from 'express';
+// ... imports
+
+const app = express();
+
+// Middleware
+app.use(helmet());
+app.use(cors());
+app.use(express.json());
+
+// Routes
+app.use('/api/auth', authRoutes);
+app.use('/api/customers', customerRoutes);
+// ... other routes
+
+// NO app.listen() in production!
+if (process.env.NODE_ENV !== 'production') {
+  app.listen(8000);
+}
+
+export default app;
+
+
+ENVIRONMENT VARIABLES (Vercel Dashboard)
+=========================================
+DATABASE_URL=postgresql://user:pass@host:5432/db?pgbouncer=true
+JWT_SECRET=your-secret-key
+JWT_EXPIRES_IN=7d
+NODE_ENV=production
+
+
+VERCEL DASHBOARD SETTINGS
+==========================
+Root Directory: backend
+Node.js Version: 22.x
+Build Command: npm run vercel-build
+Output Directory: (empty)
+
+
+WHY THIS WORKS
+==============
+
+✓ Vercel looks for serverless functions in api/ directory
+✓ api/index.ts is detected as a serverless function
+✓ Express app is exported as default (Vercel wraps it)
+✓ All routes are handled by single Express app
+✓ No app.listen() in production (serverless doesn't use ports)
+✓ vercel.json routes ALL traffic to api/index.ts
+
+
+WHAT WAS WRONG BEFORE
+======================
+
+✗ index.ts was in backend/ root (Vercel didn't detect it)
+✗ Multiple files in api/ confused Vercel
+✗ vercel.json was missing or incorrect
+✗ Routes pointed to wrong paths
+
