@@ -1,5 +1,5 @@
 import { Router, Response } from 'express';
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, Prisma } from '@prisma/client';
 import { authenticateToken, requireEmployee } from '../middleware/auth';
 import { AuthenticatedRequest, QuotationCreateRequest, QuotationUpdateRequest, ApiResponse, PaginationParams } from '../types';
 
@@ -32,9 +32,9 @@ router.get('/', authenticateToken, requireEmployee, async (req: AuthenticatedReq
 
     const where = search ? {
       OR: [
-        { quotationNumber: { contains: search, mode: 'insensitive' } },
-        { customer: { customerName: { contains: search, mode: 'insensitive' } } },
-        { customer: { companyName: { contains: search, mode: 'insensitive' } } }
+        { quotationNumber: { contains: search, mode: Prisma.QueryMode.insensitive } },
+        { customer: { customerName: { contains: search, mode: Prisma.QueryMode.insensitive } } },
+        { customer: { companyName: { contains: search, mode: Prisma.QueryMode.insensitive } } }
       ]
     } : {};
 
@@ -195,8 +195,8 @@ router.post('/', authenticateToken, requireEmployee, async (req: AuthenticatedRe
       }
 
       // Use the first address if available, otherwise null
-      if (customerWithAddresses.addresses.length > 0) {
-        customerAddressId = customerWithAddresses.addresses[0].id;
+      if (customerWithAddresses.addresses && customerWithAddresses.addresses.length > 0) {
+        customerAddressId = customerWithAddresses.addresses[0]!.id;
         console.log('🏠 Using default customer address:', customerAddressId);
       } else {
         customerAddressId = null;

@@ -33,10 +33,13 @@ export class MemoryMonitor {
       if (this.memoryHistory.length >= 2) {
         const previous = this.memoryHistory[this.memoryHistory.length - 2];
         const current = this.memoryHistory[this.memoryHistory.length - 1];
-        const heapIncrease = (current.usage.heapUsed - previous.usage.heapUsed) / 1024 / 1024;
 
-        if (heapIncrease > 50) {
-          console.warn(`⚠️  메모리 급증 감지: +${Math.round(heapIncrease)}MB in ${intervalMs/1000}s`);
+        if (previous && current) {
+          const heapIncrease = (current.usage.heapUsed - previous.usage.heapUsed) / 1024 / 1024;
+
+          if (heapIncrease > 50) {
+            console.warn(`⚠️  메모리 급증 감지: +${Math.round(heapIncrease)}MB in ${intervalMs/1000}s`);
+          }
         }
       }
 

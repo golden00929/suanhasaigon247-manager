@@ -1,5 +1,5 @@
 import { Router, Response } from 'express';
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, Prisma } from '@prisma/client';
 import { authenticateToken, requireAdmin } from '../middleware/auth';
 import { AuthenticatedRequest, PriceCategoryCreateRequest, PriceCategoryUpdateRequest, ApiResponse, PaginationParams } from '../types';
 
@@ -14,8 +14,8 @@ router.get('/categories', authenticateToken, async (req: AuthenticatedRequest, r
 
     const where = search ? {
       OR: [
-        { name: { contains: search, mode: 'insensitive' } },
-        { items: { some: { itemName: { contains: search, mode: 'insensitive' } } } }
+        { name: { contains: search, mode: Prisma.QueryMode.insensitive } },
+        { items: { some: { itemName: { contains: search, mode: Prisma.QueryMode.insensitive } } } }
       ]
     } : {};
 
@@ -278,7 +278,7 @@ router.get('/items', authenticateToken, async (req: AuthenticatedRequest, res: R
     };
 
     if (search) {
-      where.itemName = { contains: search, mode: 'insensitive' };
+      where.itemName = { contains: search, mode: Prisma.QueryMode.insensitive };
     }
 
     if (categoryId) {

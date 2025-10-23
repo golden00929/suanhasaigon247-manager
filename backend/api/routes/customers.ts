@@ -1,5 +1,5 @@
 import { Router, Response } from 'express';
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, Prisma } from '@prisma/client';
 import { authenticateToken, requireEmployee } from '../middleware/auth';
 import { AuthenticatedRequest, CustomerCreateRequest, CustomerUpdateRequest, ApiResponse, PaginationParams } from '../types';
 
@@ -14,9 +14,9 @@ router.get('/', authenticateToken, requireEmployee, async (req: AuthenticatedReq
 
     const where = search ? {
       OR: [
-        { customerName: { contains: search, mode: 'insensitive' } },
-        { companyName: { contains: search, mode: 'insensitive' } },
-        { phone: { contains: search, mode: 'insensitive' } }
+        { customerName: { contains: search, mode: Prisma.QueryMode.insensitive } },
+        { companyName: { contains: search, mode: Prisma.QueryMode.insensitive } },
+        { phone: { contains: search, mode: Prisma.QueryMode.insensitive } }
       ]
     } : {};
 
