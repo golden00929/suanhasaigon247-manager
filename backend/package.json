@@ -26,7 +26,7 @@
   "author": "Suanha Saigon 247",
   "license": "ISC",
   "engines": {
-    "node": "18.x"
+    "node": "20.x"
   },
   "dependencies": {
     "@prisma/client": "^6.16.2",
