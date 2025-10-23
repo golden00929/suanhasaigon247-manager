@@ -34,7 +34,7 @@ app.use(cors({
 app.use(morgan('combined'));
 
 // Raw body logging middleware BEFORE JSON parsing
-app.use('/auth/login', (req, res, next) => {
+app.use('/api/auth/login', (req, res, next) => {
   let body = '';
   req.on('data', (chunk) => {
     body += chunk.toString();
@@ -60,7 +60,7 @@ if (process.env.NODE_ENV === 'development') {
 
 // Add request logging middleware AFTER JSON parsing
 app.use((req, res, next) => {
-  if (req.url.includes('/auth/login')) {
+  if (req.url.includes('/api/auth/login')) {
     console.log('=== Login Request Debug ===');
     console.log('Method:', req.method);
     console.log('URL:', req.url);
@@ -71,15 +71,14 @@ app.use((req, res, next) => {
 app.use(express.urlencoded({ extended: true }));
 
 // Routes
-// Vercel serverless에서는 /api가 이미 처리되므로 prefix 없이 라우트 등록
-app.use('/auth', authRoutes);
-app.use('/customers', customerRoutes);
-app.use('/quotations', quotationRoutes);
-app.use('/prices', priceRoutes);
-app.use('/users', userRoutes);
+app.use('/api/auth', authRoutes);
+app.use('/api/customers', customerRoutes);
+app.use('/api/quotations', quotationRoutes);
+app.use('/api/prices', priceRoutes);
+app.use('/api/users', userRoutes);
 
 // Health check with memory info
-app.get('/health', (req, res) => {
+app.get('/api/health', (req, res) => {
   const memoryReport = memoryMonitor.getReport();
   res.json({
     status: 'OK',
@@ -90,7 +89,7 @@ app.get('/health', (req, res) => {
 
 // Memory report endpoint (개발환경에서만)
 if (process.env.NODE_ENV === 'development') {
-  app.get('/debug/memory', (req, res) => {
+  app.get('/api/debug/memory', (req, res) => {
     res.json(memoryMonitor.getReport());
   });
 }

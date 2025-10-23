@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "Backend API for Suanha Saigon 247 Management System",
   "type": "module",
-  "main": "dist/app.js",
   "scripts": {
     "build": "prisma generate",
     "start": "npx tsx api/app.ts",
