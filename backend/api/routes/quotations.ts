@@ -179,7 +179,7 @@ router.post('/', authenticateToken, requireEmployee, async (req: AuthenticatedRe
     }
 
     // Validate customer address ID - if provided, check if it exists
-    let customerAddressId = quotationData.customerAddressId;
+    let customerAddressId: string | null = quotationData.customerAddressId || null;
     if (!customerAddressId) {
       // If no address provided, try to find the first address for this customer
       const customerWithAddresses = await prisma.customer.findUnique({
@@ -377,7 +377,7 @@ router.put('/:id', authenticateToken, requireEmployee, async (req: Authenticated
       const items = quotationData.items || [];
       await prisma.quotationItem.createMany({
         data: items.map(item => ({
-          quotationId: id,
+          quotationId: id as string,
           categoryId: item.priceItemId && item.priceItemId !== 'custom' ? item.priceItemId : null, // priceItemId 사용, custom이면 null
           itemName: item.itemName,
           quantity: item.quantity,

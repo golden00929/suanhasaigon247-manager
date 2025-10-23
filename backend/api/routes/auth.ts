@@ -66,12 +66,10 @@ router.post('/login', async (req: Request, res: Response) => {
       });
     }
 
-    const JWT_EXPIRES_IN: string = process.env.JWT_EXPIRES_IN || '7d';
-
     const token = jwt.sign(
       { userId: user.id },
       process.env.JWT_SECRET!,
-      { expiresIn: JWT_EXPIRES_IN }
+      { expiresIn: (process.env.JWT_EXPIRES_IN || '7d') as string | number }
     );
 
     const response: ApiResponse = {
