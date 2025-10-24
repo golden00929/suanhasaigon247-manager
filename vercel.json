@@ -1,4 +1,8 @@
 {
+  "version": 2,
   "buildCommand": "cd backend && npm run vercel-build",
-  "installCommand": "cd backend && npm install"
+  "installCommand": "cd backend && npm install",
+  "rewrites": [
+    { "source": "/api/(.*)", "destination": "/api" }
+  ]
 }
