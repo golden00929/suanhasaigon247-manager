@@ -22,9 +22,21 @@ npm run dev
 ```
 
 ### **접속 정보**
+
+#### 로컬 개발 환경
 - **URL**: http://localhost:3000
 - **관리자**: `admin` / `admin123` (이메일: system.admin@suanhasaigon247.com)
 - **직원**: `employee1` / `emp123` (이메일: demo.employee@suanhasaigon247.com)
+
+#### 배포 환경 (Production)
+- **Frontend**: https://suanhasaigon247-manager.netlify.app
+- **Backend API**: https://suanhasaigon247backend-9r5rm5jy7-golden00929s-projects.vercel.app/api
+- **Database**: Supabase PostgreSQL
+
+**환경변수 설정 (프론트엔드)**:
+```bash
+VITE_API_URL=https://suanhasaigon247backend-9r5rm5jy7-golden00929s-projects.vercel.app/api
+```
 
 ---
 
