@@ -70,6 +70,24 @@ app.use((req, res, next) => {
 });
 app.use(express.urlencoded({ extended: true }));
 
+// Welcome route
+app.get('/', (req, res) => {
+  res.json({
+    name: 'Suanha Saigon 247 Manager API',
+    version: '1.0.0',
+    status: 'running',
+    endpoints: {
+      health: '/api/health',
+      auth: '/api/auth/*',
+      customers: '/api/customers/*',
+      quotations: '/api/quotations/*',
+      prices: '/api/prices/*',
+      users: '/api/users/*'
+    },
+    documentation: 'https://github.com/golden00929/suanhasaigon247-manager'
+  });
+});
+
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/customers', customerRoutes);
