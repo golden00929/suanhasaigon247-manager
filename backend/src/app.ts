@@ -26,11 +26,37 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 // Middleware
-app.use(helmet());
-app.use(cors({
-  origin: true,
-  credentials: true
+app.use(helmet({
+  crossOriginResourcePolicy: { policy: "cross-origin" }
 }));
+
+// CORS configuration for Vercel serverless
+const allowedOrigins = [
+  'https://suanhasaigon247-manager.netlify.app',
+  'http://localhost:3000',
+  'http://localhost:3001',
+  'http://localhost:5173' // Vite default port
+];
+
+app.use(cors({
+  origin: (origin, callback) => {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      console.log('CORS blocked origin:', origin);
+      callback(null, true); // Allow for now, log for debugging
+    }
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  exposedHeaders: ['Content-Type', 'Authorization'],
+  maxAge: 86400 // 24 hours
+}));
+
 app.use(morgan('combined'));
 
 // Raw body logging middleware BEFORE JSON parsing
