@@ -156,6 +156,7 @@ export const vi = {
     quotationDeleted: 'Báo giá đã được xóa',
     deleteConfirm: 'Bạn có muốn xóa báo giá này không?',
     deleteError: 'Không thể xóa báo giá',
+    deleteSuccess: '✅ Báo giá đã được xóa thành công',
     subtitle: 'Tạo và quản lý báo giá',
     searchPlaceholder: 'Tìm kiếm theo tiêu đề, tên khách hàng, ID...',
     totalQuotations: 'Tổng số báo giá',
@@ -164,7 +165,24 @@ export const vi = {
     quotationNumber: 'Số báo giá',
     quotationDate: 'Ngày báo giá',
     customerInfo: 'Thông tin khách hàng',
-    itemTable: 'Bảng hạng mục'
+    itemTable: 'Bảng hạng mục',
+
+    // Additional translations
+    loadError: 'Không thể tải danh sách báo giá.',
+    saveError: 'Lỗi khi lưu báo giá.',
+    selectCustomerError: '❌ Vui lòng chọn khách hàng.',
+    selectAddressError: '❌ Vui lòng chọn địa chỉ khách hàng.',
+    selectAddress: 'Chọn địa chỉ',
+    selectItem: 'Chọn mục (từ máy tính đơn giá)',
+    additionalNotes: 'Mô tả bổ sung hoặc yêu cầu đặc biệt...',
+    edit: 'Chỉnh sửa',
+    delete: 'Xóa',
+    save: 'Lưu',
+    cancel: 'Hủy',
+    total: 'Tổng',
+    all: 'Tất cả',
+    noPhone: 'Không có số điện thoại',
+    enterItemName: 'Nhập tên mục'
   },
 
   // Price Calculator

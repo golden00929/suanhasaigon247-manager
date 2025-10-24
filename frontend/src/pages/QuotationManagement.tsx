@@ -115,7 +115,7 @@ const QuotationManagement: React.FC = () => {
       console.log('🎉 데이터 로드 완료');
     } catch (err: any) {
       console.error('💥 견적/고객 데이터 로드 오류:', err);
-      setError('견적 목록을 불러오는데 실패했습니다.');
+      setError(t('quotations.loadError'));
     } finally {
       setLoading(false);
     }
@@ -241,14 +241,14 @@ const QuotationManagement: React.FC = () => {
 
       if (!formData.customerId) {
         console.log('❌ Customer ID missing:', formData.customerId);
-        setError('❌ 고객을 선택해 주세요.');
+        setError(t('quotations.selectCustomerError'));
         setTimeout(() => setError(''), 3000);
         return;
       }
 
       if (!formData.customerAddressId && selectedCustomerAddresses.length > 0) {
         console.log('❌ Customer Address ID missing:', formData.customerAddressId);
-        setError('❌ 고객 주소를 선택해 주세요.');
+        setError(t('quotations.selectAddressError'));
         setTimeout(() => setError(''), 3000);
         return;
       }
@@ -313,7 +313,7 @@ const QuotationManagement: React.FC = () => {
     } catch (err: any) {
       console.error('❌ Quotation save error:', err);
       console.error('❌ Error response:', err.response?.data);
-      const errorMsg = err.response?.data?.message || err.message || '견적서 저장 중 오류가 발생했습니다.';
+      const errorMsg = err.response?.data?.message || err.message || t('quotations.saveError');
       setError('❌ ' + errorMsg);
       setTimeout(() => setError(''), 5000);
     }
@@ -411,14 +411,14 @@ const QuotationManagement: React.FC = () => {
           const updatedQuotations = quotations.filter(q => q.id.toString() !== id.toString());
           setQuotations(updatedQuotations);
 
-          setSuccess('✅ 견적이 성공적으로 삭제되었습니다.');
+          setSuccess(t('quotations.deleteSuccess'));
           setTimeout(() => setSuccess(''), 3000);
         } else {
-          throw new Error(response.message || '삭제 실패');
+          throw new Error(response.message || t('quotations.deleteError'));
         }
       } catch (err: any) {
         console.error('💥 견적 삭제 오류:', err);
-        setError('❌ ' + (t('quotations.deleteError') || '견적서 삭제에 실패했습니다.'));
+        setError('❌ ' + t('quotations.deleteError'));
         setTimeout(() => setError(''), 3000);
       }
     }
@@ -1049,7 +1049,7 @@ const QuotationManagement: React.FC = () => {
                         e.currentTarget.style.backgroundColor = '#e0f2fe';
                         e.currentTarget.style.color = '#0369a1';
                       }}
-                      title="편집"
+                      title={t('quotations.edit')}
                     >
                       ✏️
                     </button>
@@ -1074,7 +1074,7 @@ const QuotationManagement: React.FC = () => {
                         e.currentTarget.style.backgroundColor = '#fef2f2';
                         e.currentTarget.style.color = '#dc2626';
                       }}
-                      title="삭제"
+                      title={t('quotations.delete')}
                     >
                       🗑️
                     </button>
@@ -1230,7 +1230,7 @@ const QuotationManagement: React.FC = () => {
                                 {customer.customerType === 'business'
                                   ? `${customer.companyName || ''} - ${customer.businessNumber || ''}`.trim().replace(/^-\s*$/, '')
                                   : t('customers.individual')
-                                } - {customer.phone || '전화번호 없음'}
+                                } - {customer.phone || t('quotations.noPhone')}
                               </div>
                             </div>
                           ))}
@@ -1259,7 +1259,7 @@ const QuotationManagement: React.FC = () => {
                           backgroundColor: 'white'
                         }}
                       >
-                        <option value="">주소를 선택하세요</option>
+                        <option value="">{t('quotations.selectAddress')}</option>
                         {selectedCustomerAddresses.map(address => (
                           <option key={address.id} value={address.id}>
                             {address.name} - {address.address}
@@ -1382,7 +1382,7 @@ const QuotationManagement: React.FC = () => {
                               backgroundColor: 'white'
                             }}
                           >
-                            <option value="">항목 선택 (단가계산기에서)</option>
+                            <option value="">{t('quotations.selectItem')}</option>
                             {priceItems.map(priceItem => (
                               <option key={priceItem.id} value={priceItem.id}>
                                 {priceItem.itemName} - {formatNumber(priceItem.unitPrice)}VND/{priceItem.unit}
@@ -1393,7 +1393,7 @@ const QuotationManagement: React.FC = () => {
                           {item.priceItemId === 'custom' && (
                             <input
                               type="text"
-                              placeholder="항목명 입력"
+                              placeholder={t('quotations.enterItemName')}
                               value={item.itemName}
                               onChange={(e) => handleItemChange(index, 'itemName', e.target.value)}
                               style={{
@@ -1642,7 +1642,7 @@ const QuotationManagement: React.FC = () => {
                     value={formData.notes}
                     onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
                     rows={2}
-                    placeholder="추가 설명이나 특별 사항..."
+                    placeholder={t('quotations.additionalNotes')}
                     style={{
                       width: '100%',
                       padding: '12px',
