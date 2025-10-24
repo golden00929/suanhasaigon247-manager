@@ -84,6 +84,19 @@ const AccountManagement: React.FC = () => {
         // 백엔드에 새 직원 추가
         const addUserToBackend = async () => {
           try {
+            // 토큰 확인
+            const token = localStorage.getItem('token');
+            if (!token) {
+              console.error('❌ 토큰이 없습니다. 재로그인이 필요합니다.');
+              setError('❌ 인증 토큰이 만료되었습니다. 다시 로그인해주세요.');
+              setTimeout(() => {
+                window.location.href = '/login';
+              }, 2000);
+              return;
+            }
+
+            console.log('✅ 토큰 확인 완료:', token.substring(0, 20) + '...');
+
             // 필수 데이터 검증
             if (!newEmployeeData.username || !newEmployeeData.email || !newEmployeeData.password || !newEmployeeData.fullName) {
               throw new Error('필수 정보 (사용자명, 이메일, 비밀번호, 성명)를 모두 입력해주세요.');
@@ -124,7 +137,20 @@ const AccountManagement: React.FC = () => {
           } catch (error) {
             console.error('직원 추가 중 오류:', error);
             const errorMessage = (error as any)?.response?.data?.message || (error as Error).message || '알 수 없는 오류';
-            console.error('상세 에러 정보:', errorMessage);
+            const statusCode = (error as any)?.response?.status;
+            console.error('상세 에러 정보:', errorMessage, '상태 코드:', statusCode);
+
+            // 인증 오류 (401, 403) 처리
+            if (statusCode === 401 || statusCode === 403 || errorMessage.includes('Invalid token') || errorMessage.includes('token')) {
+              console.error('❌ 인증 오류 발생 - 로그인 페이지로 이동');
+              setError('❌ 인증이 만료되었습니다. 다시 로그인해주세요.');
+              setTimeout(() => {
+                localStorage.removeItem('token');
+                localStorage.removeItem('user');
+                window.location.href = '/login';
+              }, 2000);
+              return;
+            }
 
             if (errorMessage.includes('Email already exists')) {
               setError(`❌ 이메일 '${newEmployeeData.email}'은 이미 사용 중입니다. 다른 이메일을 사용해주세요.`);
@@ -161,33 +187,80 @@ const AccountManagement: React.FC = () => {
           return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
         };
 
-        // 기존 사용자 업데이트
-        setUsers(prevUsers =>
-          prevUsers.map(user =>
-            user.id === updatedEmployeeData.id
-              ? {
-                  ...user,
-                  fullName: updatedEmployeeData.fullName,
-                  email: updatedEmployeeData.email,
-                  phone: updatedEmployeeData.phone,
-                  position: updatedEmployeeData.position,
-                  department: updatedEmployeeData.department,
-                  role: updatedEmployeeData.role,
-                  birthDate: convertDate(updatedEmployeeData.birthDate),
-                  hireDate: convertDate(updatedEmployeeData.hireDate),
-                  isActive: updatedEmployeeData.isActive,
-                  address: updatedEmployeeData.address,
-                  profileImage: updatedEmployeeData.profileImage || user.profileImage,
-                  notes: updatedEmployeeData.notes,
-                  updatedAt: new Date().toISOString()
-                }
-              : user
-          )
-        );
+        // 백엔드에 직원 정보 업데이트
+        const updateUserInBackend = async () => {
+          try {
+            // 토큰 확인
+            const token = localStorage.getItem('token');
+            if (!token) {
+              console.error('❌ 토큰이 없습니다. 재로그인이 필요합니다.');
+              setError('❌ 인증 토큰이 만료되었습니다. 다시 로그인해주세요.');
+              setTimeout(() => {
+                window.location.href = '/login';
+              }, 2000);
+              return;
+            }
 
-        addLog('직원 수정', `직원 '${updatedEmployeeData.fullName}'의 정보를 수정했습니다.`, '계정 관리', 'account');
-        setError('✅ 직원 정보가 성공적으로 업데이트되었습니다.');
-        setTimeout(() => setError(null), 3000);
+            const updateData = {
+              fullName: updatedEmployeeData.fullName,
+              email: updatedEmployeeData.email,
+              phone: updatedEmployeeData.phone,
+              position: updatedEmployeeData.position,
+              department: updatedEmployeeData.department,
+              role: updatedEmployeeData.role,
+              birthDate: convertDate(updatedEmployeeData.birthDate),
+              hireDate: convertDate(updatedEmployeeData.hireDate),
+              isActive: updatedEmployeeData.isActive,
+              address: updatedEmployeeData.address,
+              profileImage: updatedEmployeeData.profileImage,
+              notes: updatedEmployeeData.notes
+            };
+
+            console.log('백엔드로 전송할 업데이트 데이터:', updateData);
+
+            const response = await userAPI.updateUser(updatedEmployeeData.id, updateData);
+            if (response.success && response.data) {
+              console.log('백엔드 응답:', response.data);
+
+              // 성공시 프론트엔드 상태 업데이트
+              setUsers(prevUsers =>
+                prevUsers.map(user =>
+                  user.id === updatedEmployeeData.id
+                    ? {
+                        ...user,
+                        ...updateData,
+                        updatedAt: new Date().toISOString()
+                      }
+                    : user
+                )
+              );
+
+              addLog('직원 수정', `직원 '${updatedEmployeeData.fullName}'의 정보를 수정했습니다.`, '계정 관리', 'account');
+              setError('✅ 직원 정보가 성공적으로 업데이트되었습니다.');
+              setTimeout(() => setError(null), 3000);
+            } else {
+              throw new Error(response.message || '직원 정보 업데이트에 실패했습니다.');
+            }
+          } catch (error) {
+            console.error('직원 정보 업데이트 중 오류:', error);
+            const errorMessage = (error as any)?.response?.data?.message || (error as Error).message;
+            const statusCode = (error as any)?.response?.status;
+
+            // 인증 오류 처리
+            if (statusCode === 401 || statusCode === 403 || errorMessage?.includes('token')) {
+              setError('❌ 인증이 만료되었습니다. 다시 로그인해주세요.');
+              setTimeout(() => {
+                localStorage.removeItem('token');
+                localStorage.removeItem('user');
+                window.location.href = '/login';
+              }, 2000);
+            } else {
+              setError('❌ 직원 정보 업데이트에 실패했습니다: ' + errorMessage);
+            }
+          }
+        };
+
+        updateUserInBackend();
         setDetailPopupWindow(null);
       } else if (event.data.type === 'POPUP_CLOSED') {
         console.log('팝업 창이 닫혔습니다.');
@@ -703,7 +776,21 @@ const AccountManagement: React.FC = () => {
       setLoading(false);
     } catch (err) {
       console.error('사용자 데이터 로딩 중 오류:', err);
-      setError('사용자 목록을 불러오는 데 실패했습니다.');
+      const statusCode = (err as any)?.response?.status;
+      const errorMessage = (err as any)?.response?.data?.message || (err as Error).message;
+
+      // 인증 오류 처리
+      if (statusCode === 401 || statusCode === 403 || errorMessage?.includes('token')) {
+        console.error('❌ 인증 오류 - 로그인 페이지로 이동');
+        setError('❌ 인증이 만료되었습니다. 다시 로그인해주세요.');
+        setTimeout(() => {
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+          window.location.href = '/login';
+        }, 2000);
+      } else {
+        setError('사용자 목록을 불러오는 데 실패했습니다.');
+      }
       setLoading(false);
     }
   };
@@ -726,8 +813,21 @@ const AccountManagement: React.FC = () => {
         setTimeout(() => setError(null), 3000);
       } catch (error) {
         console.error('사용자 삭제 실패:', error);
-        setError('❌ 사용자 삭제에 실패했습니다.');
-        setTimeout(() => setError(null), 3000);
+        const statusCode = (error as any)?.response?.status;
+        const errorMessage = (error as any)?.response?.data?.message;
+
+        // 인증 오류 처리
+        if (statusCode === 401 || statusCode === 403 || errorMessage?.includes('token')) {
+          setError('❌ 인증이 만료되었습니다. 다시 로그인해주세요.');
+          setTimeout(() => {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.href = '/login';
+          }, 2000);
+        } else {
+          setError('❌ 사용자 삭제에 실패했습니다.');
+          setTimeout(() => setError(null), 3000);
+        }
       }
     }
   };
@@ -735,6 +835,9 @@ const AccountManagement: React.FC = () => {
   const handleToggleStatus = async (id: string) => {
     const userToToggle = users.find(user => user.id === id);
     try {
+      // 백엔드 API 호출 추가 (필요시)
+      await userAPI.updateUser(id, { isActive: !userToToggle?.isActive });
+
       setUsers(users.map(user =>
         user.id === id ? { ...user, isActive: !user.isActive } : user
       ));
@@ -742,7 +845,21 @@ const AccountManagement: React.FC = () => {
       setError('✅ 사용자 상태가 성공적으로 변경되었습니다.');
       setTimeout(() => setError(null), 3000);
     } catch (err) {
-      setError('❌ 사용자 상태 변경 중 오류가 발생했습니다.');
+      console.error('사용자 상태 변경 중 오류:', err);
+      const statusCode = (err as any)?.response?.status;
+      const errorMessage = (err as any)?.response?.data?.message;
+
+      // 인증 오류 처리
+      if (statusCode === 401 || statusCode === 403 || errorMessage?.includes('token')) {
+        setError('❌ 인증이 만료되었습니다. 다시 로그인해주세요.');
+        setTimeout(() => {
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+          window.location.href = '/login';
+        }, 2000);
+      } else {
+        setError('❌ 사용자 상태 변경 중 오류가 발생했습니다.');
+      }
     }
   };
 
