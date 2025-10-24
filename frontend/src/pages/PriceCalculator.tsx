@@ -192,7 +192,7 @@ const PriceCalculator: React.FC = () => {
       console.log('🎉 단가 계산기 데이터 로드 완료');
     } catch (err) {
       console.error('❌ 단가 계산기 데이터 로드 실패:', err);
-      setError('데이터를 불러오는데 실패했습니다.');
+      setError(t('priceCalculator.errorLoadingData'));
     } finally {
       setLoading(false);
     }
@@ -206,19 +206,19 @@ const PriceCalculator: React.FC = () => {
     e.preventDefault();
 
     if (!formData.categoryId) {
-      setError('카테고리를 선택해주세요.');
+      setError(t('priceCalculator.errorSelectCategory'));
       return;
     }
     if (!formData.name.trim()) {
-      setError('작업명을 입력해주세요.');
+      setError(t('priceCalculator.errorEnterTaskName'));
       return;
     }
     if (!formData.unit.trim()) {
-      setError('단위를 입력해주세요.');
+      setError(t('priceCalculator.errorEnterUnit'));
       return;
     }
     if (formData.baseCost <= 0) {
-      setError('원가는 0보다 큰 값을 입력해주세요.');
+      setError(t('priceCalculator.errorBaseCostGreaterThanZero'));
       return;
     }
 
@@ -259,11 +259,11 @@ const PriceCalculator: React.FC = () => {
         setTimeout(() => setError(null), 3000);
       } else {
         console.error('❌ 가격 항목 생성 실패:', createResponse);
-        setError('작업 추가에 실패했습니다.');
+        setError(t('priceCalculator.errorAddingTask'));
       }
     } catch (err) {
       console.error('❌ 가격 항목 추가 오류:', err);
-      setError('작업 추가에 실패했습니다.');
+      setError(t('priceCalculator.errorAddingTask'));
     }
   };
 
@@ -271,7 +271,7 @@ const PriceCalculator: React.FC = () => {
     e.preventDefault();
 
     if (!categoryFormData.name.trim()) {
-      setError('카테고리명을 입력해주세요.');
+      setError(t('priceCalculator.errorEnterCategoryName'));
       return;
     }
 
@@ -306,11 +306,11 @@ const PriceCalculator: React.FC = () => {
         setTimeout(() => setError(null), 3000);
       } else {
         console.error('❌ 카테고리 생성 실패:', createResponse);
-        setError('카테고리 추가에 실패했습니다.');
+        setError(t('priceCalculator.errorAddingCategory'));
       }
     } catch (err) {
       console.error('❌ 카테고리 추가 오류:', err);
-      setError('카테고리 추가에 실패했습니다.');
+      setError(t('priceCalculator.errorAddingCategory'));
     }
   };
 
@@ -364,11 +364,11 @@ const PriceCalculator: React.FC = () => {
         setTimeout(() => setError(null), 3000);
       } else {
         console.error('❌ 가격 항목 업데이트 실패:', updateResponse);
-        setError('단가 업데이트에 실패했습니다.');
+        setError(t('priceCalculator.errorUpdatingPrice'));
       }
     } catch (err) {
       console.error('❌ 가격 항목 업데이트 오류:', err);
-      setError('단가 업데이트에 실패했습니다.');
+      setError(t('priceCalculator.errorUpdatingPrice'));
     }
   };
 
@@ -387,7 +387,7 @@ const PriceCalculator: React.FC = () => {
     if (!editingCategory) return;
 
     if (!editCategoryFormData.name.trim()) {
-      setError('카테고리명을 입력해주세요.');
+      setError(t('priceCalculator.errorEnterCategoryName'));
       return;
     }
 
@@ -422,11 +422,11 @@ const PriceCalculator: React.FC = () => {
         setTimeout(() => setError(null), 3000);
       } else {
         console.error('❌ 카테고리 수정 실패:', updateResponse);
-        setError('카테고리 수정에 실패했습니다.');
+        setError(t('priceCalculator.errorUpdatingCategory'));
       }
     } catch (err) {
       console.error('❌ 카테고리 수정 오류:', err);
-      setError('카테고리 수정에 실패했습니다.');
+      setError(t('priceCalculator.errorUpdatingCategory'));
     }
   };
 
@@ -457,11 +457,11 @@ const PriceCalculator: React.FC = () => {
           setTimeout(() => setError(null), 3000);
         } else {
           console.error('❌ 카테고리 삭제 실패:', deleteResponse);
-          setError('카테고리 삭제에 실패했습니다.');
+          setError(t('priceCalculator.errorDeletingCategory'));
         }
       } catch (err) {
         console.error('❌ 카테고리 삭제 오류:', err);
-        setError('카테고리 삭제에 실패했습니다.');
+        setError(t('priceCalculator.errorDeletingCategory'));
       }
     }
   };
@@ -485,11 +485,11 @@ const PriceCalculator: React.FC = () => {
           setTimeout(() => setError(null), 3000);
         } else {
           console.error('❌ 가격 항목 삭제 실패:', deleteResponse);
-          setError('작업 삭제에 실패했습니다.');
+          setError(t('priceCalculator.errorDeletingTask'));
         }
       } catch (err) {
         console.error('❌ 가격 항목 삭제 오류:', err);
-        setError('작업 삭제에 실패했습니다.');
+        setError(t('priceCalculator.errorDeletingTask'));
       }
     }
   };
@@ -510,7 +510,7 @@ const PriceCalculator: React.FC = () => {
   if (loading) {
     return (
       <div className="flex justify-center items-center h-64">
-        <div className="text-lg">로딩 중...</div>
+        <div className="text-lg">{t('priceCalculator.loading')}</div>
       </div>
     );
   }
@@ -519,8 +519,8 @@ const PriceCalculator: React.FC = () => {
     <div className="p-6">
       <div className="flex justify-between items-center mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-800">단가 관리 시스템</h1>
-          <p className="text-sm text-gray-600 mt-1">원가를 입력하면 견적서용 순단가가 계산됩니다 (PIT 10% + 기업이윤 30%, 부가세 제외)</p>
+          <h1 className="text-2xl font-bold text-gray-800">{t('priceCalculator.title')}</h1>
+          <p className="text-sm text-gray-600 mt-1">{t('priceCalculator.subtitle')}</p>
         </div>
         <div className="flex space-x-3">
           <button
@@ -528,7 +528,7 @@ const PriceCalculator: React.FC = () => {
             className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors shadow-md hover:shadow-lg font-medium flex items-center space-x-2"
           >
             <span>➕</span>
-            <span>새 작업 추가</span>
+            <span>{t('priceCalculator.addNewTask')}</span>
           </button>
         </div>
       </div>
@@ -547,13 +547,13 @@ const PriceCalculator: React.FC = () => {
         {/* 왼쪽: 카테고리 목록 */}
         <div className="bg-blue-50 rounded-lg shadow p-6">
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-lg font-semibold">작업 카테고리</h2>
+            <h2 className="text-lg font-semibold">{t('priceCalculator.taskCategories')}</h2>
             <button
               onClick={() => setShowCategoryManagementModal(true)}
               className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-lg text-sm transition-colors flex items-center space-x-1"
             >
               <span>⚙️</span>
-              <span>관리</span>
+              <span>{t('priceCalculator.management')}</span>
             </button>
           </div>
 
@@ -583,18 +583,18 @@ const PriceCalculator: React.FC = () => {
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-lg font-semibold">
               {selectedCategory
-                ? categories.find(c => c.id === selectedCategory)?.name + ' 작업 목록'
-                : '전체 작업 목록'
+                ? categories.find(c => c.id === selectedCategory)?.name + ' ' + t('priceCalculator.taskList')
+                : t('priceCalculator.allTasksList')
               }
             </h2>
             <div className="text-sm text-gray-600">
-              총 {filteredItems.length}개 작업
+              {t('priceCalculator.totalTasks')} {filteredItems.length}{t('priceCalculator.tasks')}
             </div>
           </div>
 
           {filteredItems.length === 0 ? (
             <div className="text-center text-gray-500 py-8">
-              선택된 카테고리에 작업이 없습니다.
+              {t('priceCalculator.noTasksInCategory')}
             </div>
           ) : (
             <div className="space-y-2">
@@ -614,11 +614,11 @@ const PriceCalculator: React.FC = () => {
                         )}
                       </div>
                       <div className="text-sm">
-                        <span className="text-gray-400">원가:</span>
+                        <span className="text-gray-400">{t('priceCalculator.baseCostLabel')}</span>
                         <span className="text-red-600 font-medium ml-1">{formatNumber(item.baseCost || 0)} VND</span>
                       </div>
                       <div className="text-sm">
-                        <span className="text-gray-400">판매:</span>
+                        <span className="text-gray-400">{t('priceCalculator.sellingLabel')}</span>
                         <span className="text-green-600 font-bold ml-1">{formatNumber(item.unitPrice)} VND</span>
                       </div>
                     </div>
@@ -627,12 +627,12 @@ const PriceCalculator: React.FC = () => {
                         onClick={() => handlePriceUpdate(item)}
                         className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm transition-colors"
                       >
-                        단가 수정
+                        {t('priceCalculator.editUnitPrice')}
                       </button>
                       <button
                         onClick={() => handleDeleteItem(item)}
                         className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm transition-colors"
-                        title="작업 삭제"
+                        title={t('priceCalculator.deleteTask')}
                       >
                         🗑️
                       </button>
@@ -655,8 +655,8 @@ const PriceCalculator: React.FC = () => {
                   <span className="text-white text-xl">➕</span>
                 </div>
                 <div>
-                  <h3 className="text-2xl font-bold text-gray-900">새 작업 추가</h3>
-                  <p className="text-sm text-gray-600">원가를 입력하면 판매 단가가 자동 계산됩니다</p>
+                  <h3 className="text-2xl font-bold text-gray-900">{t('priceCalculator.addTask')}</h3>
+                  <p className="text-sm text-gray-600">{t('priceCalculator.addTaskDescription')}</p>
                 </div>
               </div>
               <button
@@ -677,7 +677,7 @@ const PriceCalculator: React.FC = () => {
                 <div className="md:col-span-2">
                   <div className="mb-2">
                     <label className="block text-sm font-medium text-gray-700">
-                      카테고리 *
+                      {t('priceCalculator.categoryRequired')}
                     </label>
                   </div>
                   <select
@@ -686,7 +686,7 @@ const PriceCalculator: React.FC = () => {
                     onChange={(e) => setFormData({ ...formData, categoryId: e.target.value })}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
                   >
-                    <option value="">카테고리 선택</option>
+                    <option value="">{t('priceCalculator.selectCategory')}</option>
                     {categories.map(category => (
                       <option key={category.id} value={category.id}>
                         {category.name}
@@ -697,7 +697,7 @@ const PriceCalculator: React.FC = () => {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    단위 *
+                    {t('priceCalculator.unitRequired')}
                   </label>
                   <input
                     type="text"
@@ -705,14 +705,14 @@ const PriceCalculator: React.FC = () => {
                     value={formData.unit}
                     onChange={(e) => setFormData({ ...formData, unit: e.target.value })}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
-                    placeholder="개, 미터, 회"
+                    placeholder={t('priceCalculator.unitPlaceholder')}
                   />
                 </div>
               </div>
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  작업명 *
+                  {t('priceCalculator.taskNameRequired')}
                 </label>
                 <input
                   type="text"
@@ -720,14 +720,14 @@ const PriceCalculator: React.FC = () => {
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="예: 에어컨 실외기 모터 교체"
+                  placeholder={t('priceCalculator.taskNamePlaceholder')}
                 />
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    원가 (기술자 비용) *
+                    {t('priceCalculator.baseCostRequired')}
                   </label>
                   <div className="relative">
                     <input
@@ -745,14 +745,14 @@ const PriceCalculator: React.FC = () => {
                   </div>
                   {formData.baseCost > 0 && (
                     <div className="text-xs text-red-600 mt-2">
-                      {formatNumber(formData.baseCost)} VND (원가)
+                      {formatNumber(formData.baseCost)} VND ({t('priceCalculator.baseCostTag')})
                     </div>
                   )}
                 </div>
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    계산된 판매 단가
+                    {t('priceCalculator.calculatedSellingPrice')}
                   </label>
                   <div className="relative">
                     <input
@@ -764,7 +764,7 @@ const PriceCalculator: React.FC = () => {
                   </div>
                   {formData.calculatedPrice > 0 && (
                     <div className="text-xs text-green-600 mt-2">
-                      {formatNumber(formData.calculatedPrice)} VND (자동 계산)
+                      {formatNumber(formData.calculatedPrice)} VND ({t('priceCalculator.autoCalculated')})
                     </div>
                   )}
                 </div>
@@ -772,10 +772,10 @@ const PriceCalculator: React.FC = () => {
 
               {/* 요율 설정 */}
               <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
-                <div className="font-medium text-blue-800 mb-3">⚙️ 계산 요율 설정</div>
+                <div className="font-medium text-blue-800 mb-3">{t('priceCalculator.calculationRates')}</div>
                 <div className="grid grid-cols-3 gap-3">
                   <div>
-                    <label className="block text-xs font-medium text-blue-700 mb-1">PIT (%)</label>
+                    <label className="block text-xs font-medium text-blue-700 mb-1">{t('priceCalculator.pitRate')}</label>
                     <input
                       type="number"
                       min="0"
@@ -787,7 +787,7 @@ const PriceCalculator: React.FC = () => {
                     />
                   </div>
                   <div>
-                    <label className="block text-xs font-medium text-blue-700 mb-1">기업이윤 (%)</label>
+                    <label className="block text-xs font-medium text-blue-700 mb-1">{t('priceCalculator.profitRate')}</label>
                     <input
                       type="number"
                       min="0"
@@ -799,7 +799,7 @@ const PriceCalculator: React.FC = () => {
                     />
                   </div>
                   <div>
-                    <label className="block text-xs font-medium text-blue-700 mb-1">부가세 (%)</label>
+                    <label className="block text-xs font-medium text-blue-700 mb-1">{t('priceCalculator.vatRate')}</label>
                     <input
                       type="number"
                       min="0"
@@ -816,20 +816,20 @@ const PriceCalculator: React.FC = () => {
               {formData.baseCost > 0 && (
                 <div className="bg-yellow-50 p-4 rounded-lg border border-yellow-200">
                   <div className="text-sm text-yellow-800">
-                    <div className="font-medium mb-2">💡 상세 계산 과정:</div>
+                    <div className="font-medium mb-2">{t('priceCalculator.detailedCalculation')}</div>
                     {(() => {
                       const details = getCalculationDetails(formData.baseCost);
                       return (
                         <div className="space-y-1">
-                          <div>1. 원가: <strong>{formatNumber(details.baseCost)} VND</strong></div>
-                          <div className="ml-4 text-xs">+ PIT {details.pitRate}%: +{formatNumber(Math.round(details.pitAmount))} VND</div>
-                          <div>2. PIT 적용 후: <strong>{formatNumber(Math.round(details.afterPIT))} VND</strong></div>
-                          <div className="ml-4 text-xs">+ 기업이윤 {details.profitRate}%: +{formatNumber(Math.round(details.profitAmount))} VND</div>
-                          <div>3. 기업이윤 적용 후: <strong>{formatNumber(Math.round(details.afterProfit))} VND</strong></div>
-                          <div className="ml-4 text-xs">+ 부가세 {details.vatRate}%: +{formatNumber(Math.round(details.vatAmount))} VND</div>
+                          <div>{t('priceCalculator.step1BaseCost')} <strong>{formatNumber(details.baseCost)} VND</strong></div>
+                          <div className="ml-4 text-xs">{t('priceCalculator.pitApplied')} {details.pitRate}%: +{formatNumber(Math.round(details.pitAmount))} VND</div>
+                          <div>{t('priceCalculator.step2AfterPIT')} <strong>{formatNumber(Math.round(details.afterPIT))} VND</strong></div>
+                          <div className="ml-4 text-xs">{t('priceCalculator.profitApplied')} {details.profitRate}%: +{formatNumber(Math.round(details.profitAmount))} VND</div>
+                          <div>{t('priceCalculator.step3AfterProfit')} <strong>{formatNumber(Math.round(details.afterProfit))} VND</strong></div>
+                          <div className="ml-4 text-xs">{t('priceCalculator.vatApplied')} {details.vatRate}%: +{formatNumber(Math.round(details.vatAmount))} VND</div>
                           <div className="border-t pt-1 mt-2">
-                            <div>4. 최종 판매가 (부가세 포함): <strong className="text-green-600">{formatNumber(details.finalPrice)} VND</strong></div>
-                            <div className="text-blue-600 mt-1">📋 견적서용 순단가 (부가세 제외): <strong>{formatNumber(Math.round(details.afterProfit))} VND</strong></div>
+                            <div>{t('priceCalculator.step4FinalPrice')} <strong className="text-green-600">{formatNumber(details.finalPrice)} VND</strong></div>
+                            <div className="text-blue-600 mt-1">{t('priceCalculator.quotationUnitPrice')} <strong>{formatNumber(Math.round(details.afterProfit))} VND</strong></div>
                           </div>
                         </div>
                       );
@@ -840,14 +840,14 @@ const PriceCalculator: React.FC = () => {
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  작업 설명
+                  {t('priceCalculator.taskDescription')}
                 </label>
                 <textarea
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                   rows={3}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="작업에 대한 상세 설명을 입력하세요..."
+                  placeholder={t('priceCalculator.taskDescriptionPlaceholder')}
                 />
               </div>
 
@@ -862,14 +862,14 @@ const PriceCalculator: React.FC = () => {
                   }}
                   className="px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-all font-medium"
                 >
-                  취소
+                  {t('priceCalculator.cancel')}
                 </button>
                 <button
                   type="submit"
                   className="px-8 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-all flex items-center space-x-2 font-medium shadow-lg hover:shadow-xl"
                 >
                   <span>💾</span>
-                  <span>작업 저장</span>
+                  <span>{t('priceCalculator.saveTask')}</span>
                 </button>
               </div>
             </form>
@@ -883,7 +883,7 @@ const PriceCalculator: React.FC = () => {
           <div className="relative top-20 mx-auto p-6 border w-[400px] shadow-lg rounded-md bg-blue-50">
             <div className="flex justify-between items-center mb-6">
               <h3 className="text-xl font-semibold text-gray-900">
-                📁 새 카테고리 추가
+                {t('priceCalculator.addNewCategory')}
               </h3>
               <button
                 onClick={() => {
@@ -900,7 +900,7 @@ const PriceCalculator: React.FC = () => {
             <form onSubmit={handleCategorySubmit} className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  카테고리명 *
+                  {t('priceCalculator.categoryNameRequired')}
                 </label>
                 <input
                   type="text"
@@ -908,20 +908,20 @@ const PriceCalculator: React.FC = () => {
                   value={categoryFormData.name}
                   onChange={(e) => setCategoryFormData({ ...categoryFormData, name: e.target.value })}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="예: 난방 시스템"
+                  placeholder={t('priceCalculator.categoryNamePlaceholder')}
                 />
               </div>
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  설명
+                  {t('priceCalculator.description')}
                 </label>
                 <textarea
                   value={categoryFormData.description}
                   onChange={(e) => setCategoryFormData({ ...categoryFormData, description: e.target.value })}
                   rows={3}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="카테고리에 대한 설명을 입력하세요..."
+                  placeholder={t('priceCalculator.categoryDescriptionPlaceholder')}
                 />
               </div>
 
@@ -935,14 +935,14 @@ const PriceCalculator: React.FC = () => {
                   }}
                   className="px-6 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 transition-colors"
                 >
-                  취소
+                  {t('priceCalculator.cancel')}
                 </button>
                 <button
                   type="submit"
                   className="px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors flex items-center space-x-2"
                 >
                   <span>📁</span>
-                  <span>추가하기</span>
+                  <span>{t('priceCalculator.addButton')}</span>
                 </button>
               </div>
             </form>
@@ -960,8 +960,8 @@ const PriceCalculator: React.FC = () => {
                   <span className="text-white text-xl">⚙️</span>
                 </div>
                 <div>
-                  <h3 className="text-2xl font-bold text-gray-900">카테고리 관리</h3>
-                  <p className="text-sm text-gray-600">카테고리를 추가하거나 수정/삭제할 수 있습니다</p>
+                  <h3 className="text-2xl font-bold text-gray-900">{t('priceCalculator.categoryManagement')}</h3>
+                  <p className="text-sm text-gray-600">{t('priceCalculator.categoryManagementDescription')}</p>
                 </div>
               </div>
               <button
@@ -983,7 +983,7 @@ const PriceCalculator: React.FC = () => {
                   className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg transition-colors flex items-center space-x-2"
                 >
                   <span>➕</span>
-                  <span>새 카테고리 추가</span>
+                  <span>{t('priceCalculator.addNewCategoryButton')}</span>
                 </button>
               </div>
 
@@ -991,16 +991,16 @@ const PriceCalculator: React.FC = () => {
               <div className="space-y-3 max-h-96 overflow-y-auto">
                 {categories.length === 0 ? (
                   <div className="text-center text-gray-500 py-8">
-                    등록된 카테고리가 없습니다.
+                    {t('priceCalculator.noCategories')}
                   </div>
                 ) : (
                   categories.map(category => (
                     <div key={category.id} className="bg-gray-50 rounded-lg p-4 flex justify-between items-center">
                       <div className="flex-1">
                         <h4 className="font-semibold text-gray-900">{category.name}</h4>
-                        <p className="text-sm text-gray-600">{category.description || '설명 없음'}</p>
+                        <p className="text-sm text-gray-600">{category.description || t('priceCalculator.noDescription')}</p>
                         <div className="text-xs text-gray-500 mt-1">
-                          작업 수: {items.filter(item => item.categoryId === category.id).length}개
+                          {t('priceCalculator.tasks')}: {items.filter(item => item.categoryId === category.id).length}
                         </div>
                       </div>
                       <div className="flex space-x-2">

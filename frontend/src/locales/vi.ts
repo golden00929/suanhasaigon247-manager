@@ -169,16 +169,91 @@ export const vi = {
 
   // Price Calculator
   priceCalculator: {
-    title: 'Máy tính đơn giá',
+    // Main UI
+    title: 'Hệ thống quản lý đơn giá',
+    subtitle: 'Nhập giá vốn để tính đơn giá cho báo giá (PIT 10% + Lợi nhuận doanh nghiệp 30%, không bao gồm VAT)',
+    loading: 'Đang tải...',
+    addNewTask: 'Thêm công việc mới',
+    taskCategories: 'Danh mục công việc',
+    management: 'Quản lý',
+    allTasksList: 'Danh sách tất cả công việc',
+    taskList: 'Danh sách công việc',
+    totalTasks: 'Tổng',
+    tasks: 'công việc',
+    noTasksInCategory: 'Không có công việc trong danh mục đã chọn.',
+    baseCostLabel: 'Giá vốn:',
+    sellingLabel: 'Bán:',
+    editUnitPrice: 'Sửa đơn giá',
+    deleteTask: 'Xóa công việc',
+
+    // Add Task Modal
+    addTask: 'Thêm công việc mới',
+    addTaskDescription: 'Nhập giá vốn và đơn giá bán sẽ được tính tự động',
+    category: 'Danh mục',
+    categoryRequired: 'Danh mục *',
+    selectCategory: 'Chọn danh mục',
+    unit: 'Đơn vị',
+    unitRequired: 'Đơn vị *',
+    unitPlaceholder: 'cái, mét, lần',
+    taskName: 'Tên công việc',
+    taskNameRequired: 'Tên công việc *',
+    taskNamePlaceholder: 'Ví dụ: Thay thế động cơ dàn ngoài điều hòa',
+    baseCost: 'Giá vốn (Chi phí kỹ thuật viên)',
+    baseCostRequired: 'Giá vốn (Chi phí kỹ thuật viên) *',
+    baseCostTag: 'Giá vốn',
+    calculatedSellingPrice: 'Đơn giá bán được tính',
+    autoCalculated: 'Tự động tính',
+
+    // Calculation Rates
+    calculationRates: '⚙️ Cài đặt tỷ lệ tính',
+    pitRate: 'PIT (%)',
+    profitRate: 'Lợi nhuận doanh nghiệp (%)',
+    vatRate: 'VAT (%)',
+
+    // Detailed Calculation
+    detailedCalculation: '💡 Quy trình tính chi tiết:',
+    step1BaseCost: '1. Giá vốn:',
+    pitApplied: '+ PIT',
+    step2AfterPIT: '2. Sau khi áp dụng PIT:',
+    profitApplied: '+ Lợi nhuận doanh nghiệp',
+    step3AfterProfit: '3. Sau khi áp dụng lợi nhuận doanh nghiệp:',
+    vatApplied: '+ VAT',
+    step4FinalPrice: '4. Giá bán cuối cùng (bao gồm VAT):',
+    quotationUnitPrice: '📋 Đơn giá cho báo giá (không bao gồm VAT):',
+
+    // Task Description
+    taskDescription: 'Mô tả công việc',
+    taskDescriptionPlaceholder: 'Nhập mô tả chi tiết về công việc...',
+
+    // Category Modal
+    addNewCategory: '📁 Thêm danh mục mới',
+    categoryName: 'Tên danh mục',
+    categoryNameRequired: 'Tên danh mục *',
+    categoryNamePlaceholder: 'Ví dụ: Hệ thống sưởi',
+    description: 'Mô tả',
+    categoryDescriptionPlaceholder: 'Nhập mô tả về danh mục...',
+    addButton: 'Thêm',
+
+    // Category Management Modal
+    categoryManagement: 'Quản lý danh mục',
+    categoryManagementDescription: 'Bạn có thể thêm, chỉnh sửa hoặc xóa danh mục',
+    addNewCategoryButton: 'Thêm danh mục mới',
+    noCategories: 'Không có danh mục đã đăng ký.',
+    noDescription: 'Không có mô tả',
+
+    // Common Actions
+    cancel: 'Hủy',
+    save: 'Lưu',
+    saveTask: 'Lưu công việc',
+    edit: 'Chỉnh sửa',
+    delete: 'Xóa',
+
+    // Legacy (keep for compatibility)
     selectItems: 'Chọn mục',
     selectedItems: 'Mục đã chọn',
-    category: 'Danh mục',
     allCategories: 'Tất cả danh mục',
-    selectCategory: 'Chọn danh mục',
     itemName: 'Tên mục',
-    unit: 'Đơn vị',
     unitPrice: 'Đơn giá',
-    description: 'Mô tả',
     addItem: 'Thêm mục',
     addNewItem: 'Thêm mục mới',
     add: 'Thêm',
@@ -189,14 +264,33 @@ export const vi = {
     subtotal: 'Tạm tính',
     tax: 'Thuế',
     totalAmount: 'Tổng tiền',
-    noCategories: 'Không có danh mục',
     noItems: 'Không có mục',
-    categoryAdded: 'Danh mục đã được thêm',
-    categoryUpdated: 'Danh mục đã được cập nhật',
-    categoryDeleted: 'Danh mục đã được xóa',
-    itemAdded: 'Mục đã được thêm',
-    itemUpdated: 'Mục đã được cập nhật',
-    itemDeleted: 'Mục đã được xóa',
+
+    // Success Messages
+    categoryAdded: '✅ Danh mục đã được thêm thành công',
+    categoryUpdated: '✅ Danh mục đã được cập nhật thành công',
+    categoryDeleted: '✅ Danh mục đã được xóa thành công',
+    itemAdded: '✅ Mục đã được thêm thành công',
+    itemUpdated: '✅ Đơn giá đã được cập nhật thành công',
+    itemDeleted: '✅ Mục đã được xóa thành công',
+    taskAdded: '✅ Công việc đã được thêm thành công',
+    taskUpdated: '✅ Công việc đã được cập nhật thành công',
+    taskDeleted: '✅ Công việc đã được xóa thành công',
+
+    // Error Messages
+    errorLoadingData: '❌ Không thể tải dữ liệu.',
+    errorSelectCategory: '❌ Vui lòng chọn danh mục.',
+    errorEnterTaskName: '❌ Vui lòng nhập tên công việc.',
+    errorEnterUnit: '❌ Vui lòng nhập đơn vị.',
+    errorBaseCostGreaterThanZero: '❌ Vui lòng nhập giá vốn lớn hơn 0.',
+    errorAddingTask: '❌ Không thể thêm công việc.',
+    errorEnterCategoryName: '❌ Vui lòng nhập tên danh mục.',
+    errorAddingCategory: '❌ Không thể thêm danh mục.',
+    errorUpdatingPrice: '❌ Không thể cập nhật đơn giá.',
+    errorUpdatingCategory: '❌ Không thể sửa đổi danh mục.',
+    errorDeletingCategory: '❌ Không thể xóa danh mục.',
+    errorDeletingTask: '❌ Không thể xóa công việc.',
+
     deleteConfirm: 'Bạn có muốn xóa mục này không?'
   },
 
