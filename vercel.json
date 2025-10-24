@@ -2,6 +2,7 @@
   "version": 2,
   "buildCommand": "cd backend && npm run vercel-build",
   "installCommand": "cd backend && npm install",
+  "outputDirectory": "backend/public",
   "rewrites": [
     { "source": "/api/(.*)", "destination": "/api" }
   ]
