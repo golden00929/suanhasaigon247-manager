@@ -152,12 +152,16 @@ app.use((req, res) => {
   res.status(404).json({ message: 'Route not found' });
 });
 
-// Vercel에서는 listen()을 호출하지 않음 (서버리스 환경)
-// 로컬 개발 환경에서만 서버 시작
-if (process.env.NODE_ENV !== 'production') {
+// Start server
+// Vercel serverless: export only (no listen)
+// Render.com / local: listen on port
+const isVercel = process.env.VERCEL === '1' || process.env.VERCEL_ENV;
+
+if (!isVercel) {
   const PORT = process.env.PORT || 8000;
   app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
+    console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
   });
 }
 
