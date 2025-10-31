@@ -169,16 +169,91 @@ export const ko = {
 
   // Price Calculator
   priceCalculator: {
-    title: '단가계산기',
+    // Main UI
+    title: '단가 관리 시스템',
+    subtitle: '원가를 입력하여 견적용 단가를 계산합니다 (PIT 10% + 기업이익 30%, VAT 미포함)',
+    loading: '로딩 중...',
+    addNewTask: '새 작업 추가',
+    taskCategories: '작업 카테고리',
+    management: '관리',
+    allTasksList: '전체 작업 목록',
+    taskList: '작업 목록',
+    totalTasks: '총',
+    tasks: '작업',
+    noTasksInCategory: '선택한 카테고리에 작업이 없습니다.',
+    baseCostLabel: '원가:',
+    sellingLabel: '판매가:',
+    editUnitPrice: '단가 수정',
+    deleteTask: '작업 삭제',
+
+    // Add Task Modal
+    addTask: '새 작업 추가',
+    addTaskDescription: '원가를 입력하면 판매 단가가 자동 계산됩니다',
+    category: '카테고리',
+    categoryRequired: '카테고리 *',
+    selectCategory: '카테고리 선택',
+    unit: '단위',
+    unitRequired: '단위 *',
+    unitPlaceholder: '개, 미터, 회',
+    taskName: '작업명',
+    taskNameRequired: '작업명 *',
+    taskNamePlaceholder: '예: 에어컨 실외기 모터 교체',
+    baseCost: '원가 (기술자 비용)',
+    baseCostRequired: '원가 (기술자 비용) *',
+    baseCostTag: '원가',
+    calculatedSellingPrice: '계산된 판매 단가',
+    autoCalculated: '자동 계산',
+
+    // Calculation Rates
+    calculationRates: '⚙️ 계산 비율 설정',
+    pitRate: 'PIT (%)',
+    profitRate: '기업이익 (%)',
+    vatRate: 'VAT (%)',
+
+    // Detailed Calculation
+    detailedCalculation: '💡 상세 계산 과정:',
+    step1BaseCost: '1. 원가:',
+    pitApplied: '+ PIT',
+    step2AfterPIT: '2. PIT 적용 후:',
+    profitApplied: '+ 기업이익',
+    step3AfterProfit: '3. 기업이익 적용 후:',
+    vatApplied: '+ VAT',
+    step4FinalPrice: '4. 최종 판매가 (VAT 포함):',
+    quotationUnitPrice: '📋 견적용 단가 (VAT 미포함):',
+
+    // Task Description
+    taskDescription: '작업 설명',
+    taskDescriptionPlaceholder: '작업에 대한 상세 설명을 입력하세요...',
+
+    // Category Modal
+    addNewCategory: '📁 새 카테고리 추가',
+    categoryName: '카테고리명',
+    categoryNameRequired: '카테고리명 *',
+    categoryNamePlaceholder: '예: 냉난방 시스템',
+    description: '설명',
+    categoryDescriptionPlaceholder: '카테고리에 대한 설명을 입력하세요...',
+    addButton: '추가',
+
+    // Category Management Modal
+    categoryManagement: '카테고리 관리',
+    categoryManagementDescription: '카테고리를 추가, 수정, 삭제할 수 있습니다',
+    addNewCategoryButton: '새 카테고리 추가',
+    noCategories: '등록된 카테고리가 없습니다.',
+    noDescription: '설명 없음',
+
+    // Common Actions
+    cancel: '취소',
+    save: '저장',
+    saveTask: '작업 저장',
+    edit: '수정',
+    delete: '삭제',
+
+    // Legacy (keep for compatibility)
     selectItems: '항목 선택',
     selectedItems: '선택된 항목',
-    category: '카테고리',
     allCategories: '모든 카테고리',
-    selectCategory: '카테고리 선택',
     itemName: '항목명',
-    unit: '단위',
     unitPrice: '단가',
-    description: '설명',
     addItem: '항목 추가',
     addNewItem: '새 항목 추가',
     add: '추가',
@@ -189,14 +264,33 @@ export const ko = {
     subtotal: '소계',
     tax: '세금',
     totalAmount: '총액',
-    noCategories: '카테고리가 없습니다',
     noItems: '항목이 없습니다',
-    categoryAdded: '카테고리가 추가되었습니다',
-    categoryUpdated: '카테고리가 업데이트되었습니다',
-    categoryDeleted: '카테고리가 삭제되었습니다',
-    itemAdded: '항목이 추가되었습니다',
-    itemUpdated: '항목이 업데이트되었습니다',
-    itemDeleted: '항목이 삭제되었습니다',
+
+    // Success Messages
+    categoryAdded: '✅ 카테고리가 추가되었습니다',
+    categoryUpdated: '✅ 카테고리가 업데이트되었습니다',
+    categoryDeleted: '✅ 카테고리가 삭제되었습니다',
+    itemAdded: '✅ 항목이 추가되었습니다',
+    itemUpdated: '✅ 단가가 업데이트되었습니다',
+    itemDeleted: '✅ 항목이 삭제되었습니다',
+    taskAdded: '✅ 작업이 추가되었습니다',
+    taskUpdated: '✅ 작업이 업데이트되었습니다',
+    taskDeleted: '✅ 작업이 삭제되었습니다',
+
+    // Error Messages
+    errorLoadingData: '❌ 데이터를 불러올 수 없습니다.',
+    errorSelectCategory: '❌ 카테고리를 선택해주세요.',
+    errorEnterTaskName: '❌ 작업명을 입력해주세요.',
+    errorEnterUnit: '❌ 단위를 입력해주세요.',
+    errorBaseCostGreaterThanZero: '❌ 원가는 0보다 커야 합니다.',
+    errorAddingTask: '❌ 작업을 추가할 수 없습니다.',
+    errorEnterCategoryName: '❌ 카테고리명을 입력해주세요.',
+    errorAddingCategory: '❌ 카테고리를 추가할 수 없습니다.',
+    errorUpdatingPrice: '❌ 단가를 업데이트할 수 없습니다.',
+    errorUpdatingCategory: '❌ 카테고리를 수정할 수 없습니다.',
+    errorDeletingCategory: '❌ 카테고리를 삭제할 수 없습니다.',
+    errorDeletingTask: '❌ 작업을 삭제할 수 없습니다.',
+
     deleteConfirm: '이 항목을 삭제하시겠습니까?'
   },
 
