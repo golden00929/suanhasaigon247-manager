@@ -933,13 +933,13 @@ const PriceCalculator: React.FC = () => {
                     setCategoryFormData({ name: '', description: '' });
                     setError(null);
                   }}
-                  className="px-6 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 transition-colors"
+                  className="px-6 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 transition-colors font-medium"
                 >
                   {t('priceCalculator.cancel')}
                 </button>
                 <button
                   type="submit"
-                  className="px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors flex items-center space-x-2"
+                  className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors flex items-center space-x-2 font-semibold shadow-md"
                 >
                   <span>📁</span>
                   <span>{t('priceCalculator.addButton')}</span>
@@ -980,7 +980,7 @@ const PriceCalculator: React.FC = () => {
                     setShowCategoryManagementModal(false);
                     setShowCategoryModal(true);
                   }}
-                  className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg transition-colors flex items-center space-x-2"
+                  className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition-colors flex items-center space-x-2 font-semibold shadow-md"
                 >
                   <span>➕</span>
                   <span>{t('priceCalculator.addNewCategoryButton')}</span>
@@ -1009,13 +1009,13 @@ const PriceCalculator: React.FC = () => {
                             setShowCategoryManagementModal(false);
                             handleEditCategory(category);
                           }}
-                          className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm transition-colors"
+                          className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm transition-colors font-medium shadow-sm"
                         >
                           수정
                         </button>
                         <button
                           onClick={() => handleDeleteCategory(category)}
-                          className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm transition-colors"
+                          className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-sm transition-colors font-medium shadow-sm"
                         >
                           삭제
                         </button>
@@ -1028,7 +1028,7 @@ const PriceCalculator: React.FC = () => {
               <div className="flex justify-end pt-6 border-t border-gray-200">
                 <button
                   onClick={() => setShowCategoryManagementModal(false)}
-                  className="px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-all font-medium"
+                  className="px-6 py-3 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400 transition-all font-semibold shadow-sm"
                 >
                   닫기
                 </button>
