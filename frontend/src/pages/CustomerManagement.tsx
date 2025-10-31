@@ -403,7 +403,7 @@ const CustomerManagement: React.FC = () => {
                     backgroundColor: customer.customerType === 'business' ? '#dbeafe' : '#f3f4f6',
                     color: customer.customerType === 'business' ? '#1d4ed8' : '#374151'
                   }}>
-                    {t(`customers.${customer.customerType}`)}
+                    {customer.customerType ? t(`customers.${customer.customerType}`) : t('customers.individual')}
                   </span>
                   {customer.customerType === 'business' && customer.businessNumber && (
                     <div style={{fontSize: '11px', color: '#6b7280', marginTop: '2px'}}>
